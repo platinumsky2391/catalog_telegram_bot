@@ -30,7 +30,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
       const appUrl = process.env.APP_URL || "https://localhost:3000";
       const userName = ctx.from?.first_name || "странник";
       return ctx.replyWithMarkdownV2(
-        `Приветствую, ${userName}\\! ✨ Я бот\\-проводник в мир душевного исцеления и регрессивных практик\\.\n\nЗапишитесь на глубокий сеанс регрессии, гипнотерапии, энергочистки или встречи с Васшим Я через наше удобное интерактивное мини\\-приложение ниже\\! 👇`,
+        `Приветствую, ${userName}\\! ✨ Я бот\\-проводник в мир душевного исцеления и регрессивных практик\\.\n\nЗапишитесь на глубокий сеанс регрессии, гипнотерапии, энергетической чистки или встречи с Вашим Я через наше удобное интерактивное мини\\-приложение ниже\\! 👇`,
         Markup.inlineKeyboard([
           [Markup.button.webApp("🚀 Открыть каталог услуг", appUrl)],
           [Markup.button.url("💬 Написать мастеру напрямую", "https://t.me/your_telegram_username")]
@@ -46,7 +46,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
         "1️⃣ *Путешествие в прошлые жизни* \\- 8 500 ₽ \\(2–2\\.5 ч\\)\n" +
         "2️⃣ *Гипнотерапия* \\- 6 000 ₽ \\(1\\.5–2 ч\\)\n" +
         "3️⃣ *Встреча с Высшим Я* \\- 9 000 ₽ \\(2 ч\\)\n" +
-        "4️⃣ *Энергочистка* \\- 5 500 ₽ \\(1\\.5 ч\\)\n\n" +
+        "4️⃣ *Энергетическая чистка* \\- 5 500 ₽ \\(1\\.5 ч\\)\n\n" +
         "Нажмите на кнопку ниже, чтобы открыть интерактивное приложение с подробнейшим описанием каждого сеанса\\! 👇",
         Markup.inlineKeyboard([
           [Markup.button.webApp("✨ Открыть каталог", appUrl)]
@@ -66,7 +66,12 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
         .catch(err => console.error("[ERROR] Не удалось установить Webhook:", err));
     } else {
       console.log("[INFO] Запуск Telegram Бота в режиме Long Polling (локальная разработка)...");
-      bot.launch()
+      // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict
+      bot.telegram.deleteWebhook({ drop_pending_updates: true })
+        .then(() => {
+          console.log("[INFO] Вебхук успешно удален перед запуском Long Polling.");
+          return bot!.launch();
+        })
         .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
         .catch(err => console.error("[ERROR] Ошибка запуска бота:", err));
     }

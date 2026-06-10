@@ -22,6 +22,14 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import AnalyticalLogger from "./logger";
+// @ts-expect-error
+import pastLivesImg from "../img/prosmotr-proshlyh-zhiznej.webp";
+// @ts-expect-error
+import hypnotherapyImg from "../img/izbavlenie-ot-strahov.webp";
+// @ts-expect-error
+import higherSelfImg from "../img/otvety-ot-vysshego-ya.webp";
+// @ts-expect-error
+import energyCleansingImg from "../img/snyatie-energeticheskih-blokov.webp";
 
 // Get Telegram WebApp object
 const tg = (window as any).Telegram?.WebApp;
@@ -263,117 +271,54 @@ export default function App() {
   // Helper to render decorative thematic SVGs for each card
   const renderSessionSvg = (id: string) => {
     switch (id) {
-      case "past-lives": // Blue/purple spiral portal, galaxy, hourglass
+      case "past-lives": // Loads the custom user webp image
         return (
-          <svg className="w-full h-full object-cover opacity-80" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="url(#bg-past-lives)" />
-            <circle cx="100" cy="100" r="85" stroke="#818cf8" strokeWidth="1" strokeDasharray="4 4" className="animate-[spin_120s_linear_infinite]" />
-            <circle cx="100" cy="100" r="65" stroke="#a78bfa" strokeWidth="0.5" strokeDasharray="10 5" className="animate-[spin_40s_linear_infinite_reverse]" />
-            <path d="M100 15C53.6 15 15 53.6 15 100s38.6 85 85 85 85-38.6 85-85S146.4 15 100 15zm0 152c-37 0-67-30-67-67s30-67 67-67 67 30 67 67-30 67-67 67z" fill="#4f46e5" fillOpacity="0.15" />
-            
-            {/* Hourglass and stars */}
-            <path d="M75 60h50v5L108 95l17 30v5H75v-5l17-30-17-30v-5zm3 5l16 28.5L78 125h44l-16-31.5L122 65H78z" fill="#f472b6" fillOpacity="0.6" className="animate-pulse" />
-            <circle cx="100" cy="95" r="3" fill="#cbd5e1" />
-            <path d="M100 65v30l-15 15m15-15l15 15" stroke="#f472b6" strokeWidth="1.5" />
-            <path d="M90 120a10 5 0 0120 0H90z" fill="#a78bfa" />
-            
-            <defs>
-              <linearGradient id="bg-past-lives" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#1e1b4b" />
-                <stop offset="0.5" stopColor="#311042" />
-                <stop offset="1" stopColor="#090514" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <img 
+            src={pastLivesImg} 
+            alt="Путешествие в прошлые жизни" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              // Fallback to high-quality spiritual illustration if image fails
+              e.currentTarget.src = "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80";
+            }}
+          />
         );
-      case "hypnotherapy": // Spiral eye, soothing deep blue/teal concentric waves
+      case "hypnotherapy": // Loads the custom user webp image for hypnotherapy
         return (
-          <svg className="w-full h-full object-cover opacity-85" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="url(#bg-hypnotherapy)" />
-            {/* Soothing Concentric Hypnotic Waves */}
-            <circle cx="100" cy="100" r="80" stroke="#06b6d4" strokeWidth="1" strokeOpacity="0.2" />
-            <circle cx="100" cy="100" r="60" stroke="#0d9488" strokeWidth="1.5" strokeOpacity="0.3" className="animate-[pulse_4s_ease-in-out_infinite]" />
-            <circle cx="100" cy="100" r="40" stroke="#2dd4bf" strokeWidth="2" strokeOpacity="0.5" />
-            <circle cx="100" cy="100" r="20" stroke="#67e8f9" strokeWidth="1" strokeDasharray="2 2" className="animate-[spin_10s_linear_infinite]" />
-            
-            {/* Abstract Sleeping Mind Eye Icon */}
-            <path d="M40 100c14-25 106-25 120 0-14 25-106 25-120 0z" stroke="#2dd4bf" strokeWidth="2" />
-            <circle cx="100" cy="100" r="16" stroke="#2dd4bf" strokeWidth="1.5" />
-            <circle cx="100" cy="100" r="8" fill="#06b6d4" className="animate-pulse" />
-            {/* Eyelashes represented symmetrically */}
-            <path d="M60 84l-4-8M80 80l-2-9M100 78v-10M120 80l2-9M140 84l4-8" stroke="#2dd4bf" strokeWidth="1.5" strokeLinecap="round" />
-            
-            <defs>
-              <linearGradient id="bg-hypnotherapy" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#042f2e" />
-                <stop offset="0.6" stopColor="#083344" />
-                <stop offset="1" stopColor="#021526" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <img 
+            src={hypnotherapyImg} 
+            alt="Гипнотерапия (Избавление от страхов)" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80";
+            }}
+          />
         );
-      case "higher-self": // Divine geometric star, golden/violet crown portal
+      case "higher-self": // Loads the custom user webp image for Higher Self answers
         return (
-          <svg className="w-full h-full object-cover opacity-85" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="url(#bg-higher-self)" />
-            {/* Golden Starburst Rays */}
-            <g className="animate-[spin_80s_linear_infinite]">
-              <line x1="100" y1="20" x2="100" y2="180" stroke="#f59e0b" strokeWidth="0.5" strokeOpacity="0.4" />
-              <line x1="20" y1="100" x2="180" y2="100" stroke="#f59e0b" strokeWidth="0.5" strokeOpacity="0.4" />
-              <line x1="43.4" y1="43.4" x2="156.6" y2="156.6" stroke="#f59e0b" strokeWidth="0.5" strokeOpacity="0.3" />
-              <line x1="156.6" y1="43.4" x2="43.4" y2="156.6" stroke="#f59e0b" strokeWidth="0.5" strokeOpacity="0.3" />
-            </g>
-
-            {/* Sacred Lotus/Merkaba Shape */}
-            <polygon points="100,50 115,85 150,100 115,115 100,150 85,115 50,100 85,85" fill="#f59e0b" fillOpacity="0.15" stroke="#fbbf24" strokeWidth="1.5" />
-            <polygon points="100,70 110,90 130,100 110,110 100,130 90,110 70,100 90,90" fill="#a78bfa" fillOpacity="0.25" stroke="#c084fc" strokeWidth="1" />
-            
-            <circle cx="100" cy="100" r="12" fill="url(#golden-core)" className="animate-pulse" />
-            <circle cx="100" cy="100" r="30" stroke="#fbbf24" strokeWidth="1" strokeDasharray="6 3" />
-            
-            <defs>
-              <linearGradient id="bg-higher-self" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#1e1b4b" />
-                <stop offset="0.5" stopColor="#451a03" />
-                <stop offset="1" stopColor="#1a042e" />
-              </linearGradient>
-              <radialGradient id="golden-core" cx="50%" cy="50%" r="50%">
-                <stop stopColor="#fffbeb" />
-                <stop offset="1" stopColor="#f59e0b" />
-              </radialGradient>
-            </defs>
-          </svg>
+          <img 
+            src={higherSelfImg} 
+            alt="Ответы от Высшего Я" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80";
+            }}
+          />
         );
-      case "energy-cleansing": // Emerald crystal energy flow, shield and spark
+      case "energy-cleansing": // Loads the custom user webp image for energetic cleansing
         return (
-          <svg className="w-full h-full object-cover opacity-85" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="200" height="200" fill="url(#bg-energy-cleansing)" />
-            {/* Energy Fields */}
-            <circle cx="100" cy="100" r="75" stroke="#10b981" strokeWidth="0.75" strokeDasharray="8 4" className="animate-[spin_30s_linear_infinite]" />
-            <circle cx="100" cy="100" r="55" stroke="#059669" strokeWidth="1" />
-            
-            {/* Flowing Clean Aura spark/crystal */}
-            <g transform="translate(100, 100) scale(1.1)">
-              <path d="M0 -45 L35 0 L0 45 L-35 0 Z" fill="#047857" fillOpacity="0.2" stroke="#34d399" strokeWidth="1.5" />
-              <path d="M0 -45 L15 0 L0 45 L-15 0 Z" fill="#10b981" fillOpacity="0.2" stroke="#6ee7b7" strokeWidth="1" />
-              <line x1="-35" y1="0" x2="35" y2="0" stroke="#a7f3d0" strokeWidth="0.75" strokeOpacity="0.5" />
-              <line x1="0" y1="-45" x2="0" y2="45" stroke="#a7f3d0" strokeWidth="0.75" strokeOpacity="0.5" />
-            </g>
-            
-            {/* Small Sparkles */}
-            <circle cx="50" cy="60" r="2" fill="#a7f3d0" className="animate-ping" />
-            <circle cx="150" cy="70" r="1.5" fill="#a7f3d0" className="animate-pulse" />
-            <circle cx="140" cy="140" r="2.5" fill="#a7f3d0" className="animate-pulse" />
-            <circle cx="65" cy="135" r="1.5" fill="#a7f3d0" className="animate-ping" />
-
-            <defs>
-              <linearGradient id="bg-energy-cleansing" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#022c22" />
-                <stop offset="0.6" stopColor="#064e3b" />
-                <stop offset="1" stopColor="#011b13" />
-              </linearGradient>
-            </defs>
-          </svg>
+          <img 
+            src={energyCleansingImg} 
+            alt="Снятие энергетических блоков" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              e.currentTarget.src = "https://images.unsplash.com/photo-1518241353330-0f7941c2d9b5?auto=format&fit=crop&w=600&q=80";
+            }}
+          />
         );
       default:
         return null;
@@ -461,8 +406,8 @@ export default function App() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     
                     {/* Category Label */}
-                    <span className="absolute top-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide text-neutral-200 border border-white/10 uppercase flex items-center gap-1.5">
-                      {session.symbol} Духовная практика
+                    <span className="absolute top-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide text-neutral-200 border border-white/15 uppercase flex items-center gap-1.5 font-sans">
+                      {getSessionIcon(session.id, "w-3 h-3 shrink-0")} {session.badge}
                     </span>
 
                     {/* Price Tag badge inside image */}
@@ -479,13 +424,15 @@ export default function App() {
                   {/* Card Content Description info */}
                   <div className="p-4 relative">
                     <div className="flex items-center gap-2 mb-1">
-                      {getSessionIcon(session.id, "w-4 h-4")}
                       <h2 className="text-xl font-bold font-display text-[var(--tg-theme-text-color)] group-hover:text-[var(--tg-theme-link-color)] transition-colors" id={`title-${session.id}`}>
                         {session.title}
                       </h2>
                     </div>
                     
-                    <p className="text-xs text-[var(--tg-theme-hint-color)] leading-relaxed mt-2 line-clamp-2">
+                    <p 
+                      className={`text-[var(--tg-theme-hint-color)] leading-relaxed mt-2 ${session.customFontSize && session.customFontSize.startsWith("text-") ? session.customFontSize : (!session.customFontSize ? "text-xs" : "")}`}
+                      style={{ fontSize: session.customFontSize && !session.customFontSize.startsWith("text-") ? session.customFontSize : undefined }}
+                    >
                       {session.shortDesc}
                     </p>
 
@@ -531,13 +478,12 @@ export default function App() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                 
                 {/* Floating symbol and quick info */}
-                <span className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide text-white border border-white/10 uppercase">
-                  {selectedSession.symbol} {selectedSession.title}
+                <span className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide text-white border border-white/10 uppercase flex items-center gap-1.5 font-sans">
+                  {getSessionIcon(selectedSession.id, "w-3.5 h-3.5 shrink-0")} {selectedSession.title}
                 </span>
 
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <div className="flex items-center gap-2 mb-1.5">
-                    {getSessionIcon(selectedSession.id, "w-5 h-5")}
                     <h2 className="text-2xl font-extrabold font-display leading-tight">
                       {selectedSession.title}
                     </h2>

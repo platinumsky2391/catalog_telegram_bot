@@ -1,6 +1,0 @@
-{
-  "name": "Сеансы и Цены",
-  "description": "Телеграм Мини-Приложение (TMA) — Каталог сеансов регрессии, гипнотерапии, энергочистки и встречи с Высшим Я.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

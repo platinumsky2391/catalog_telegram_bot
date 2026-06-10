@@ -371,8 +371,8 @@ export default function App() {
             <h1 className="text-3xl font-extrabold tracking-tight text-[var(--tg-theme-text-color)]" id="title-main">
               Сеансы и цены
             </h1>
-            <p className="text-xs text-[var(--tg-theme-hint-color)] mt-2 max-w-xs mx-auto leading-relaxed" id="desc-main">
-              Профессиональные практики регрессии, гипнотерапии и энергоинформационного исцеления
+            <p className="text-[var(--tg-theme-hint-color)] mt-2 max-w-md mx-auto leading-relaxed" id="desc-main" style={{ fontSize: "14px" }}>
+              Выберите подходящий вам метод. Глубокая работа с подсознанием, которая поможет найти первопричины ваших запросов и вернуть внутреннюю гармонию.
             </p>
           </header>
         )}
@@ -479,7 +479,7 @@ export default function App() {
                 
                 {/* Floating symbol and quick info */}
                 <span className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide text-white border border-white/10 uppercase flex items-center gap-1.5 font-sans">
-                  {getSessionIcon(selectedSession.id, "w-3.5 h-3.5 shrink-0")} {selectedSession.title}
+                  {getSessionIcon(selectedSession.id, "w-3.5 h-3.5 shrink-0")} {selectedSession.badge}
                 </span>
 
                 <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -489,11 +489,8 @@ export default function App() {
                     </h2>
                   </div>
                   <div className="flex items-center gap-3 text-xs text-white/90">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" /> {selectedSession.duration}
-                    </span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-                    <span className="font-semibold text-amber-300">
+                    <span className="font-semibold text-amber-300 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       Личный сеанс онлайн
                     </span>
                   </div>
@@ -522,76 +519,99 @@ export default function App() {
               <div className="card p-5 rounded-3xl shadow-sm space-y-4">
                 <div className="flex justify-between items-center pb-3 border-b border-neutral-200/50 dark:border-neutral-800/15">
                   <div>
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Стоимость</span>
-                    <p className="text-2xl font-bold price-tag">{selectedSession.price.toLocaleString("ru-RU")} ₽</p>
+                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Стоимость</span>
+                    <p className="text-[26px] font-bold price-tag">{selectedSession.price.toLocaleString("ru-RU")} ₽</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Длительность</span>
-                    <p className="text-sm font-medium text-[var(--tg-theme-text-color)] mt-1 flex items-center gap-1 justify-end">
+                  <div className="flex flex-col items-center">
+                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Длительность</span>
+                    <p className="text-[15px] font-medium text-[var(--tg-theme-text-color)] mt-1 flex items-center gap-1 justify-center">
                       <Clock className="w-4 h-4 text-[var(--tg-theme-link-color)]" /> {selectedSession.duration}
                     </p>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <span className="text-[10px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)] block">О сеансе</span>
-                  <p className="text-xs text-[var(--tg-theme-text-color)] leading-relaxed">
+                  <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)] block">О сеансе</span>
+                  <p className="text-[14px] text-[var(--tg-theme-text-color)] leading-relaxed">
                     {selectedSession.fullDesc}
                   </p>
                 </div>
               </div>
 
-              {/* WHAT CLIENT GETS (Benefits) */}
-              <div className="card p-5 rounded-3xl shadow-sm space-y-3">
-                <h3 className="text-sm font-bold tracking-tight text-[var(--tg-theme-text-color)] flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Результаты сеанса:
-                </h3>
-                <ul className="space-y-2.5 text-xs text-[var(--tg-theme-text-color)]" id="benefits-list">
-                  {selectedSession.benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-start gap-2 leading-relaxed">
-                      <span className="text-emerald-500 text-sm mt-0.5 shrink-0">✦</span>
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
               {/* DETAILED WORKFLOW IN SESSION (Steps) */}
               <div className="card p-5 rounded-3xl shadow-sm space-y-4">
                 <div className="space-y-1">
-                  <h3 className="text-sm font-bold text-[var(--tg-theme-text-color)]">
+                  <h3 className="text-[16px] font-bold text-[var(--tg-theme-text-color)]">
                     {selectedSession.longInfo.sectionTitle}
                   </h3>
-                  <p className="text-xs text-[var(--tg-theme-hint-color)] leading-relaxed">
-                    {selectedSession.longInfo.sectionText}
-                  </p>
+                  {selectedSession.longInfo.sectionText && (
+                    <p className="text-[14px] text-[var(--tg-theme-hint-color)] leading-relaxed">
+                      {selectedSession.longInfo.sectionText}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-3 pt-2">
-                  <h4 className="text-xs font-semibold text-[var(--tg-theme-text-color)]">
+                  <h4 className="text-[14px] font-semibold text-[var(--tg-theme-text-color)]">
                     {selectedSession.longInfo.stepsTitle}
                   </h4>
-                  <div className="space-y-3 relative before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[rgba(36,129,204,0.2)]">
+                  <div className="space-y-3 relative before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[rgba(36,129,204,0.2)]">
                     {selectedSession.longInfo.steps.map((step, idx) => (
                       <div key={idx} className="flex gap-3 pl-1 items-start relative">
-                        <div className="w-4 h-4 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border border-[var(--tg-theme-link-color)] text-[10px] font-bold text-[var(--tg-theme-link-color)] flex items-center justify-center shrink-0 mt-0.5 z-10">
+                        <div className="w-5 h-5 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border border-[var(--tg-theme-link-color)] text-[12px] font-bold text-[var(--tg-theme-link-color)] flex items-center justify-center shrink-0 mt-0.5 z-10">
                           {idx + 1}
                         </div>
-                        <p className="text-xs text-[var(--tg-theme-text-color)] leading-relaxed">
+                        <p className="text-[14px] text-[var(--tg-theme-text-color)] leading-relaxed">
                           {step}
                         </p>
                       </div>
                     ))}
                   </div>
                 </div>
-
-                {selectedSession.longInfo.warningText && (
-                  <div className="mt-2 p-3 rounded-xl bg-amber-500/5 text-[10px] text-amber-500/90 border border-amber-500/20 leading-normal flex gap-1.5 font-sans">
-                    <Info className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                    <span>{selectedSession.longInfo.warningText}</span>
-                  </div>
-                )}
               </div>
+
+              {/* WHAT CLIENT GETS (Benefits) */}
+              <div className="card p-5 rounded-3xl shadow-sm space-y-3">
+                <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] flex items-center gap-1.5">
+                  {selectedSession.id === "past-lives" ? (
+                    "Частые запросы на просмотр прошлых жизней"
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Результаты сеанса:
+                    </>
+                  )}
+                </h3>
+                {selectedSession.id === "past-lives" && (
+                  <p className="text-[13px] text-[var(--tg-theme-hint-color)] leading-relaxed mb-2">
+                    Жизнь часто дает нам подсказки. Если вы замечаете в своей жизни следующие сценарии, корень проблемы может лежать за пределами текущего воплощения.
+                  </p>
+                )}
+                <ul className="space-y-2.5 text-[14px] text-[var(--tg-theme-text-color)]" id="benefits-list">
+                  {selectedSession.benefits.map((benefit, i) => (
+                    <li key={i} className="flex items-start gap-2 leading-relaxed">
+                      <span className="text-emerald-500 text-[14px] mt-1 shrink-0">✦</span>
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* EXAMPLES OF REQUESTS ON SCREENSHOT */}
+              {selectedSession.exampleRequests && (
+                <div className="card p-5 rounded-3xl shadow-sm space-y-4">
+                  <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] leading-snug">
+                    {selectedSession.exampleRequests.title}
+                  </h3>
+                  <ul className="space-y-2.5 text-[13.5px] text-[var(--tg-theme-text-color)]" id="example-requests-list">
+                    {selectedSession.exampleRequests.columns.flat().map((req, reqIdx) => (
+                      <li key={reqIdx} className="flex items-start gap-2.5 leading-relaxed">
+                        <span className="text-indigo-400 text-[18px] leading-none -mt-[2px] shrink-0 select-none">•</span>
+                        <span className="opacity-90">{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
                {/* Desktop / browser Simulation booking Button.
                   (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}

@@ -71,7 +71,7 @@
             <span class="info-label">Стоимость</span>
             <div class="detail-price-tag" id="detail-price">8 500 ₽</div>
           </div>
-          <div class="text-right">
+          <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
             <span class="info-label">Длительность</span>
             <div class="detail-duration-tag" id="detail-duration">2 часа</div>
           </div>
@@ -80,15 +80,6 @@
           <span class="info-label">О сеансе</span>
           <p class="detail-description" id="detail-description"></p>
         </div>
-      </div>
-
-      <!-- Результаты / Преимущества (Динамически набивается через js) -->
-      <div class="info-card">
-        <h3 class="card-title-with-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          Результаты сеанса:
-        </h3>
-        <ul class="benefits-list" id="benefits-list"></ul>
       </div>
 
       <!-- Как проходит сеанс / Этапы -->
@@ -103,6 +94,22 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
           <span id="warning-text"></span>
         </div>
+      </div>
+
+      <!-- Результаты / Преимущества (Динамически набивается через js) -->
+      <div class="info-card">
+        <h3 class="card-title-with-icon" id="benefits-title">
+          <svg id="benefits-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <span id="benefits-title-text">Результаты сеанса:</span>
+        </h3>
+        <p id="benefits-desc" style="font-size: 12px; opacity: 0.8; margin-top: 6px; margin-bottom: 12px; line-height: 1.4; display: none; color: rgba(255, 255, 255, 0.6);"></p>
+        <ul class="benefits-list" id="benefits-list"></ul>
+      </div>
+
+      <!-- Примеры самых распространённых запросов для прохождения сеанса -->
+      <div class="info-card hidden" id="example-requests-card">
+        <h3 class="requests-title" id="example-requests-card-title" style="font-size: 15px; font-weight: bold; margin-bottom: 15px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.3;"></h3>
+        <ul class="benefits-list" id="example-requests-list" style="margin-top: 10px;"></ul>
       </div>
 
       <!-- Кнопка бронирования внутри браузера/ПК (Для Telegram скрывается, так как используется нативная MainButton) -->

@@ -1,0 +1,529 @@
+/* ==========================================================================
+   Telegram Mini App - Native Catalog Stylesheet
+   Поддержка темной/светлой темы Telegram через CSS переменные
+   ========================================================================== */
+
+:root {
+  /* Цветовые переменные Telegram с фоллбеками на красивый светлый дизайн */
+  --tg-bg-color: var(--tg-theme-bg-color, #ffffff);
+  --tg-secondary-bg-color: var(--tg-theme-secondary-bg-color, #f4f4f7);
+  --tg-text-color: var(--tg-theme-text-color, #000000);
+  --tg-hint-color: var(--tg-theme-hint-color, #999999);
+  --tg-link-color: var(--tg-theme-link-color, #2481cc);
+  --tg-button-color: var(--tg-theme-button-color, #2481cc);
+  --tg-button-text-color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+/* Сброс базовых стилей */
+*, *::after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--tg-secondary-bg-color);
+  color: var(--tg-text-color);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Декоративное фоновое свечение в стиле духовных практик */
+.ambient-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.15;
+  transition: background 0.5s ease;
+}
+
+.bg-glow-left {
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, #6366f1 0%, rgba(255,255,255,0) 70%);
+}
+
+.bg-glow-right {
+  top: 300px;
+  right: -100px;
+  background: radial-gradient(circle, #ec4899 0%, rgba(255,255,255,0) 70%);
+}
+
+/* Контейнер приложения */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px 80px 16px;
+}
+
+/* Заголовок магазина */
+.shop-header {
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.sub-header-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #6366f1;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.main-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--tg-text-color);
+}
+
+.main-description {
+  font-size: 13px;
+  color: var(--tg-hint-color);
+  margin-top: 8px;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Сетка каталога */
+.catalog-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Карточки товаров */
+.session-card {
+  background-color: var(--tg-bg-color);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.session-card:active {
+  transform: scale(0.98);
+}
+
+/* Полноразмерный баннер/заглушка под фото */
+.card-photo-placeholder {
+  height: 176px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-photo-placeholder svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dark-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  pointer-events: none;
+}
+
+.category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 10px;
+  color: #f1f5f9;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.price-tag {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background-color: #4f46e5;
+  padding: 4px 12px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.duration-tag {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Контент карточки */
+.card-content {
+  padding: 16px;
+  position: relative;
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.svg-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tg-text-color);
+}
+
+.card-short-desc {
+  font-size: 12px;
+  color: var(--tg-hint-color);
+  line-height: 1.5;
+}
+
+.card-footer-row {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-t: 1px solid rgba(0, 0, 0, 0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-hint-text {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tg-hint-color);
+}
+
+.card-action-link {
+  font-size: 12px;
+  color: var(--tg-link-color);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Страница детального просмотра */
+.detail-page {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+.back-btn-fallback {
+  background: none;
+  border: none;
+  color: var(--tg-link-color);
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 4px 0;
+  transition: opacity 0.2s ease;
+}
+
+.back-btn-fallback:active {
+  opacity: 0.6;
+}
+
+.detail-banner {
+  height: 220px;
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.detail-banner svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-banner-content {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  color: #ffffff;
+}
+
+.detail-banner-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 4px;
+}
+
+/* Карточки с информацией внутри деталей */
+.info-card {
+  background-color: var(--tg-bg-color);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 14px;
+}
+
+.info-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tg-hint-color);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.detail-price-tag {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--tg-text-color);
+}
+
+.detail-duration-tag {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tg-text-color);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.detail-description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--tg-text-color);
+}
+
+.card-title-with-icon {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tg-text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* Список преимуществ */
+.benefits-list {
+  list-style: none;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--tg-text-color);
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.bullet-star {
+  color: #10b981;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* Волнообразный таймлайн процессов */
+.section-title-normal {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tg-text-color);
+  margin-bottom: 4px;
+}
+
+.section-text-normal {
+  font-size: 12px;
+  color: var(--tg-hint-color);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.steps-sub-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--tg-text-color);
+  margin-bottom: 10px;
+}
+
+.steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  padding-left: 10px;
+}
+
+.steps-timeline::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 17px;
+  width: 2px;
+  background-color: rgba(99, 102, 241, 0.2);
+}
+
+.timeline-step {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.step-num {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--tg-secondary-bg-color);
+  border: 1px solid #6366f1;
+  font-size: 9px;
+  font-weight: 700;
+  color: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  z-index: 1;
+}
+
+.step-text {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--tg-text-color);
+}
+
+.warning-box {
+  margin-top: 14px;
+  padding: 10px;
+  border-radius: 12px;
+  background-color: rgba(245, 158, 11, 0.05);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  font-size: 10px;
+  color: rgba(217, 119, 6, 0.9);
+  display: flex;
+  gap: 6px;
+  line-height: 1.4;
+}
+
+.warning-box svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Действие бронирования (для веба) */
+.booking-action-bar {
+  margin-top: 10px;
+}
+
+.order-button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  background-color: var(--tg-button-color);
+  color: var(--tg-button-text-color);
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-button:active {
+  transform: scale(0.99);
+}
+
+.order-notice {
+  font-size: 10px;
+  color: var(--tg-hint-color);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Поддержка нативной тёмной темы в Telegram */
+@media (prefers-color-scheme: dark) {
+  .session-card {
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+}

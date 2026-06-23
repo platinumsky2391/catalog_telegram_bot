@@ -203,7 +203,34 @@ export default function App() {
       tg.HapticFeedback.notificationOccurred("success");
     }
 
-    if (tg) {
+    const openChat = () => {
+      AnalyticalLogger.trackConversion("TMA_BOOKING_LINK_OPEN", session.price, {
+        sessionId: session.id,
+        sessionTitle: session.title
+      });
+
+      // Send confirmation event to our backend server
+      fetch("/api/book", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: session.id,
+          title: session.title,
+          price: session.price,
+          user: tg?.initDataUnsafe?.user || null
+        })
+      }).catch(err => {
+        AnalyticalLogger.error("API_BOOK_ERROR", err);
+      });
+
+      if (tg && typeof tg.openTelegramLink === 'function') {
+        tg.openTelegramLink("https://t.me/meta_manoir");
+      } else {
+        window.open("https://t.me/meta_manoir", "_blank");
+      }
+    };
+
+    if (tg && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.2')) {
       // Build interactive popup in Telegram
       AnalyticalLogger.info("BOOKING_POPUP_SHOWN", {
         sessionId: session.id,
@@ -224,29 +251,7 @@ export default function App() {
         });
 
         if (buttonId === "ok") {
-          AnalyticalLogger.trackConversion("TMA_BOOKING_LINK_OPEN", session.price, {
-            sessionId: session.id,
-            sessionTitle: session.title
-          });
-
-          // Send confirmation event to our backend server (which will notify the user via the Telegram Bot)
-          fetch("/api/book", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              sessionId: session.id,
-              title: session.title,
-              price: session.price,
-              user: tg.initDataUnsafe?.user || null
-            })
-          }).catch(err => {
-            AnalyticalLogger.error("API_BOOK_ERROR", err);
-          });
-
-          // Open direct chat
-          tg.openTelegramLink("https://t.me/your_telegram_username");
+          openChat();
         } else {
           AnalyticalLogger.info("BOOKING_CANCELLED", {
             sessionId: session.id
@@ -254,29 +259,14 @@ export default function App() {
         }
       });
     } else {
-      // In-app alert fallback inside browser preview
-      AnalyticalLogger.trackConversion("WEB_SIMULATOR_BOOKING_COMMITTED", session.price, {
-        sessionId: session.id,
-        sessionTitle: session.title
-      });
-
-      // Send to local backend as well for demonstration logging
-      fetch("/api/book", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          sessionId: session.id,
-          title: session.title,
-          price: session.price,
-          user: { id: 123456789, first_name: "Иван (Симулятор)" }
-        })
-      }).catch(err => {
-        console.error("Failed to post booking to simulator api:", err);
-      });
-
-      setBookingStatus(session.title);
+      const confirmed = window.confirm(`Вы выбрали сеанс «${session.title}». Нажмите ОК, чтобы перейти к диалогу со мной.`);
+      if (confirmed) {
+        openChat();
+      } else {
+        AnalyticalLogger.info("BOOKING_CANCELLED", {
+          sessionId: session.id
+        });
+      }
     }
   };
 

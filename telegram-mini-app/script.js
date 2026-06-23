@@ -591,7 +591,19 @@ function bookSession() {
     tg.HapticFeedback.notificationOccurred("success");
   }
 
-  if (tg) {
+  const openChat = () => {
+    Logger.trackConversion("TMA_BOOKING_LINK_OPEN", curSession.price, {
+      sessionId: curSession.id,
+      sessionTitle: curSession.title
+    });
+    if (tg && typeof tg.openTelegramLink === 'function') {
+      tg.openTelegramLink("https://t.me/meta_manoir");
+    } else {
+      window.open("https://t.me/meta_manoir", "_blank");
+    }
+  };
+
+  if (tg && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.2')) {
     Logger.info("BOOKING_POPUP_SHOWN", {
       sessionId: curSession.id,
       sessionPrice: curSession.price
@@ -611,11 +623,7 @@ function bookSession() {
       });
 
       if (btnId === "confirm") {
-        Logger.trackConversion("TMA_BOOKING_LINK_OPEN", curSession.price, {
-          sessionId: curSession.id,
-          sessionTitle: curSession.title
-        });
-        tg.openTelegramLink("https://t.me/your_telegram_username");
+        openChat();
       } else {
         Logger.info("BOOKING_CANCELLED", {
           sessionId: curSession.id
@@ -624,11 +632,14 @@ function bookSession() {
     });
   } else {
     // Браузерный алерт-фоллбек
-    Logger.trackConversion("WEB_SIMULATOR_BOOKING_COMMITTED", curSession.price, {
-      sessionId: curSession.id,
-      sessionTitle: curSession.title
-    });
-    alert(`Вы забронировали сеанс «${curSession.title}» за ${curSession.price.toLocaleString("ru-RU")} ₽!\n\nДля согласования даты свяжитесь в Telegram: @your_telegram_username`);
+    const confirmed = window.confirm(`Желаете забронировать сеанс «${curSession.title}»? Нажмите ОК для связи со мной.`);
+    if (confirmed) {
+      openChat();
+    } else {
+      Logger.info("BOOKING_CANCELLED", {
+        sessionId: curSession.id
+      });
+    }
   }
 }
 

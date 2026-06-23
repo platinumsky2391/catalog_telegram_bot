@@ -71,8 +71,8 @@ const DATABASE = [
     title: "Путешествие в прошлые жизни",
     price: 8584,
     duration: "1.5 - 5ч",
-    shortDesc: "Исследование памяти прошлых воплощений. Пространство для встречи со своей истинной сутью, где появляется возможность переосмыслить повторяющиеся сценарии и найти в опыте прошлого новые точки опоры для настоящего.",
-    fullDesc: "Исследование памяти прошлых воплощений. Пространство для встречи со своей истинной сутью, где появляется возможность переосмыслить повторяющиеся сценарии и найти в опыте прошлого новые точки опоры для настоящего.",
+    shortDesc: "С помощью приятного глубокого транса Вы погружаетесь в пространство, где начинаете видеть и полностью перепроживать своё прошлое воплощение. Таким образом, приходят осознания по вашим запросам.",
+    fullDesc: "Пространство для встречи со своей истинной сутью, где появляется возможность переосмыслить повторяющиеся сценарии и найти в опыте прошлого новые точки опоры для настоящего.<br><br>Сессия регрессии длится от 1,5 до 5 часов. Перед началом проводится беседа, которая включает обсуждение вашего запроса и инструкцию для успешного прохождения практики. Далее с помощью приятной образной медитации вы погружаетесь в пространство, где начинаете видеть своё прошлое воплощение. Это дает возможность не только получить нужную информацию, но и заново прожить саму ситуацию, взглянуть на нее со стороны. Таким образом, к вам приходит глубинное осознание и ясный ответ на ваш запрос.",
     benefits: [
       "Желание узнать, кем вы были в прошлых воплощениях, в каких эпохах жили и как этот опыт сформировал ваши текущие взгляды",
       "Эффект дежавю, чувство «я уже был здесь» или глубокая связь с историческим периодом, к которому вы не имеете отношения в этой жизни",
@@ -80,13 +80,11 @@ const DATABASE = [
       "Желание на собственном опыте ощутить продолжение существования души вне физического тела и навсегда снять этот глубинный корневой страх",
       "Странное чувство, что вы давно знаете человека (даже если видите его впервые), или тянущиеся из прошлого неочевидные связи с конкретными людьми",
       "Намерение соприкоснуться с жизнями, где вы были максимально успешны, реализованы или счастливы, чтобы мысленно «перенести» этот опыт в сегодня",
-      "Желание понять, почему в вашей жизни повторяются одни и те же сценарии, чтобы осознать невыученный урок и выйти из «колеса Сансары»",
-      "Увидеть куда отправляется душа после завершения воплощения, встретиться с духовными наставниками или «родственными душами»",
-      "Выход за масштаб одной жизни, чтобы посмотреть на картину целиком: какие макро-уроки вы уже прошли и какой глобальный опыт накапливает ваша суть"
-    ],
-    symbol: "🌀",
-    svgBackground: `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="200" height="200" fill="url(#bg-lives)" />
+      "Желание понять, почему в вашей жизни повторяются одни и те же сценарии, чтобы осознать �      steps: [
+        "<b>Обход критического фактора</b>. Наш сознательный ум действует как стражник, фильтруя информацию. В состоянии транса этот стражник \"дремлет\", позволяя нам получить прямой доступ к глубинной памяти, где хранятся записи обо всех воплощениях.",
+        "<b>Телесный отклик и эмоции</b>. Вы не просто \"видите картинки\", вы перепроживаете опыт телом. Именно высвобождение заблокированных эмоций в момент первичной травмы (даже если она была 300 лет назад) дает терапевтический исцеляющий эффект сейчас.",
+        "<b>Полный контроль</b>. Эриксоновский и регрессивный гипноз абсолютно безопасен. Вы находитесь в диалоге, всё осознаете, можете в любой момент открыть глаза или прервать сеанс. Это похоже на глубокую расслабряющую медитацию."
+      ]200" fill="url(#bg-lives)" />
       <circle cx="100" cy="100" r="85" stroke="#818cf8" stroke-width="1" stroke-dasharray="4 4" />
       <circle cx="100" cy="100" r="65" stroke="#a78bfa" stroke-width="0.5" stroke-dasharray="10 5" />
       <path d="M75 60h50v5L108 95l17 30v5H75v-5l17-30-17-30v-5zm3 5l16 28.5L78 125h44l-16-31.5L122 65H78z" fill="#f472b6" fill-opacity="0.6"/>
@@ -317,7 +315,7 @@ function renderCatalog() {
       <div class="card-photo-placeholder">
         ${session.svgBackground}
         <div class="dark-overlay"></div>
-        <span class="category-badge">${session.symbol} Практика</span>
+        <span class="badge-glass" style="position: absolute; top: 12px; left: 12px;">${session.symbol} Практика</span>
         <div class="price-tag">${session.price.toLocaleString("ru-RU")} ₽</div>
         <div class="duration-tag">
           <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -360,14 +358,36 @@ function showDetail(session) {
   // Визуальное переключение экранов
   document.getElementById("shop-header").classList.add("hidden");
   document.getElementById("catalog-grid").classList.add("hidden");
-  document.getElementById("detail-page").classList.remove("hidden");
+  const detailPage = document.getElementById("detail-page");
+  detailPage.classList.remove("hidden");
+  
+  if (session.id === "past-lives") {
+    detailPage.classList.add("premium-past-lives");
+    document.body.classList.add("premium-past-lives");
+  } else {
+    detailPage.classList.remove("premium-past-lives");
+    document.body.classList.remove("premium-past-lives");
+  }
   
   // Прокрутка наверх
   window.scrollTo({ top: 0, behavior: "smooth" });
 
   // Настройка текстовых блоков
-  document.getElementById("detail-price").innerText = `${session.price.toLocaleString("ru-RU")} ₽`;
-  document.getElementById("detail-duration").innerText = session.duration;
+  const detailPrice = document.getElementById("detail-price");
+  detailPrice.innerText = `${session.price.toLocaleString("ru-RU")} ₽`;
+  if (session.id === "past-lives") {
+    detailPrice.style.color = "#818cf8"; // text-indigo-400
+  } else {
+    detailPrice.style.color = "var(--tg-theme-link-color)";
+  }
+  
+  const detailDuration = document.getElementById("detail-duration");
+  if (session.id === "past-lives") {
+    detailDuration.innerHTML = `<span style="display: flex; align-items: center; justify-content: center; gap: 4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${session.duration}</span>`;
+  } else {
+    detailDuration.innerHTML = `<span style="display: flex; align-items: center; justify-content: center; gap: 4px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--tg-theme-link-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${session.duration}</span>`;
+  }
+  
   document.getElementById("detail-description").innerText = session.fullDesc;
   
   // Наполнение баннера-заглушки
@@ -376,7 +396,7 @@ function showDetail(session) {
     ${session.svgBackground}
     <div class="dark-overlay"></div>
     <div class="detail-banner-content">
-      <span class="category-badge">${session.symbol} Личная практика онлайн</span>
+      <span class="badge-glass" style="margin-bottom: 12px;">${session.symbol} Личная практика онлайн</span>
       <h2 class="detail-banner-title">${session.title}</h2>
     </div>
   `;
@@ -387,13 +407,18 @@ function showDetail(session) {
   const benefitsIcon = document.getElementById("benefits-icon");
 
   if (session.id === "past-lives") {
-    benefitsTitleText.innerText = "Частые запросы на просмотр прошлых жизней";
-    if (benefitsIcon) benefitsIcon.style.display = "none";
+    benefitsTitleText.innerText = "С какими ощущениями приходят:";
+    if (benefitsIcon) {
+      benefitsIcon.outerHTML = `<svg id="benefits-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>`;
+    }
     benefitsDesc.innerText = "Жизнь часто дает нам подсказки. Если вы замечаете в своей жизни следующие сценарии, корень проблемы может лежать за пределами текущего воплощения.";
     benefitsDesc.style.display = "block";
   } else {
     benefitsTitleText.innerText = "Результаты сеанса:";
-    if (benefitsIcon) benefitsIcon.style.display = "inline-block";
+    const currentIcon = document.getElementById("benefits-icon");
+    if (currentIcon) {
+      currentIcon.outerHTML = `<svg id="benefits-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+    }
     benefitsDesc.innerText = "";
     benefitsDesc.style.display = "none";
   }
@@ -402,29 +427,55 @@ function showDetail(session) {
   benefitsList.innerHTML = "";
   session.benefits.forEach((benefit) => {
     const li = document.createElement("li");
-    li.innerHTML = `<span class="bullet-star">✦</span> <span>${benefit}</span>`;
+    const bulletColor = session.id === "past-lives" ? "color: #818cf8;" : "";
+    li.innerHTML = `<span class="bullet-star" style="${bulletColor}">✦</span> <span>${benefit}</span>`;
     benefitsList.appendChild(li);
   });
 
   // Набивка структуры таймлайна (этапы)
-  document.getElementById("steps-section-title").innerText = session.longInfo.sectionTitle;
+  const stepsSectionTitle = document.getElementById("steps-section-title");
+  stepsSectionTitle.innerText = session.longInfo.sectionTitle;
   const stepsSectionText = document.getElementById("steps-section-text");
   if (session.longInfo.sectionText) {
     stepsSectionText.innerText = session.longInfo.sectionText;
     stepsSectionText.style.display = "block";
+    stepsSectionTitle.style.marginBottom = "4px";
   } else {
     stepsSectionText.innerText = "";
     stepsSectionText.style.display = "none";
+    stepsSectionTitle.style.marginBottom = "14px";
   }
   document.getElementById("steps-list-title").innerText = session.longInfo.stepsTitle;
 
   const timeline = document.getElementById("steps-timeline");
   timeline.innerHTML = "";
+  if (session.id === "past-lives") {
+    timeline.classList.add("premium-timeline");
+  } else {
+    timeline.classList.remove("premium-timeline");
+  }
+
   session.longInfo.steps.forEach((step, idx) => {
     const sDiv = document.createElement("div");
     sDiv.className = "timeline-step";
+    
+    let lineHTML = '';
+    if (session.longInfo.steps.length > 1) {
+      if (idx === 0) {
+        lineHTML = `<div class="step-line-first"></div>`;
+      } else if (idx === session.longInfo.steps.length - 1) {
+        lineHTML = `<div class="step-line-last"></div>`;
+      } else {
+        lineHTML = `<div class="step-line-middle"></div>`;
+      }
+    }
+    
+    const dotBorder = session.id === "past-lives" ? "border: 1px solid #818cf8; color: #818cf8;" : "";
     sDiv.innerHTML = `
-      <div class="step-num">${idx + 1}</div>
+      <div class="step-left">
+        ${lineHTML}
+        <div class="step-num" style="${dotBorder}">${idx + 1}</div>
+      </div>
       <p class="step-text">${step}</p>
     `;
     timeline.appendChild(sDiv);
@@ -450,7 +501,7 @@ function showDetail(session) {
     allRequests.forEach((req) => {
       const li = document.createElement("li");
       li.innerHTML = `
-        <span style="color: #818cf8; font-size: 18px; flex-shrink: 0; user-select: none; margin-top: -2px; line-height: 1;">•</span>
+        <span style="color: #818cf8; font-size: 18px; flex-shrink: 0; user-select: none; margin-top: 3.5px; line-height: 1; display: inline-flex;">•</span>
         <span style="opacity: 0.9;">${req}</span>
       `;
       listEl.appendChild(li);
@@ -459,8 +510,15 @@ function showDetail(session) {
     exampleRequestsCard.classList.add("hidden");
   }
 
+  const orderBtn = document.getElementById("order-button");
+  if (session.id === "past-lives") {
+    orderBtn.classList.add("btn-premium");
+  } else {
+    orderBtn.classList.remove("btn-premium");
+  }
+
   // Вибрация (Haptic) в Telegram при взаимодействии
-  if (tg?.HapticFeedback) {
+  if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
     tg.HapticFeedback.impactOccurred("medium");
   }
 
@@ -471,6 +529,17 @@ function showDetail(session) {
     tg.BackButton.onClick(hideDetail);
 
     // Включение Главной Кнопки Бронирования нативного дизайна Telegram
+    if (session.id === "past-lives") {
+      tg.MainButton.setParams({
+        color: "#4f46e5",
+        text_color: "#ffffff"
+      });
+    } else {
+      tg.MainButton.setParams({
+        color: tg.themeParams.button_color || "#2481cc",
+        text_color: tg.themeParams.button_text_color || "#ffffff"
+      });
+    }
     tg.MainButton.setText(`Забронировать (${session.price.toLocaleString("ru-RU")} ₽)`);
     tg.MainButton.show();
     tg.MainButton.onClick(bookSession);
@@ -495,7 +564,7 @@ function hideDetail() {
   document.getElementById("shop-header").classList.remove("hidden");
   document.getElementById("catalog-grid").classList.remove("hidden");
 
-  if (tg?.HapticFeedback) {
+  if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
     tg.HapticFeedback.impactOccurred("light");
   }
 
@@ -518,7 +587,7 @@ function bookSession() {
     sessionPrice: curSession.price
   });
 
-  if (tg?.HapticFeedback) {
+  if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
     tg.HapticFeedback.notificationOccurred("success");
   }
 

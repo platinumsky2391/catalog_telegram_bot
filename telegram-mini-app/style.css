@@ -72,16 +72,6 @@ body {
   text-align: center;
 }
 
-.sub-header-badge {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #6366f1;
-  display: block;
-  margin-bottom: 6px;
-}
-
 .main-title {
   font-family: 'Outfit', sans-serif;
   font-size: 32px;
@@ -97,7 +87,7 @@ body {
   max-width: 320px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
 /* Сетка каталога */
@@ -143,36 +133,40 @@ body {
   pointer-events: none;
 }
 
-.category-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 4px 10px;
+.badge-glass {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 10px;
-  color: #f1f5f9;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 500;
   letter-spacing: 0.05em;
-  text-transform: uppercase;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
+  text-transform: uppercase;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  user-select: none;
 }
 
 .price-tag {
   position: absolute;
   bottom: 12px;
   right: 12px;
-  background-color: #4f46e5;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 4px 12px;
   border-radius: 12px;
   color: #ffffff;
   font-weight: 600;
   font-size: 14px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .duration-tag {
@@ -216,7 +210,7 @@ body {
 .card-short-desc {
   font-size: 12px;
   color: var(--tg-hint-color);
-  line-height: 1.5;
+  line-height: 1.65;
 }
 
 .card-footer-row {
@@ -244,11 +238,19 @@ body {
   gap: 4px;
 }
 
+/* Premium gradient for "Past Lives" detail */
+.premium-past-lives .info-card {
+  background: linear-gradient(145deg, rgba(30, 27, 75, 0.4) 0%, rgba(17, 24, 39, 0.4) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.05);
+}
+
 /* Страница детального просмотра */
 .detail-page {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  position: relative;
   animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -268,22 +270,28 @@ body {
 }
 
 .back-btn-fallback {
-  background: none;
-  border: none;
-  color: var(--tg-link-color);
-  font-size: 12px;
-  font-weight: 600;
-  display: inline-flex;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  align-self: flex-start;
-  padding: 4px 0;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .back-btn-fallback:active {
-  opacity: 0.6;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .detail-banner {
@@ -326,13 +334,23 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.info-row-container {
   padding-bottom: 14px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   margin-bottom: 14px;
+}
+
+.info-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.info-values {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .info-label {
@@ -341,19 +359,22 @@ body {
   letter-spacing: 0.08em;
   color: var(--tg-hint-color);
   display: block;
-  margin-bottom: 4px;
+  line-height: 1;
 }
 
 .detail-price-tag {
   font-size: 22px;
   font-weight: 700;
   color: var(--tg-text-color);
+  line-height: 1;
 }
 
 .detail-duration-tag {
   font-size: 14px;
   font-weight: 500;
   color: var(--tg-text-color);
+  line-height: 1;
+  transform: translateY(-2px);
 }
 
 .text-right {
@@ -362,7 +383,7 @@ body {
 
 .detail-description {
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--tg-text-color);
 }
 
@@ -390,13 +411,15 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  line-height: 1.5;
+  line-height: 1.65;
 }
 
 .bullet-star {
   color: #10b981;
-  font-weight: bold;
   flex-shrink: 0;
+  display: inline-flex;
+  margin-top: 3.5px;
+  line-height: 1;
 }
 
 /* Волнообразный таймлайн процессов */
@@ -410,7 +433,7 @@ body {
 .section-text-normal {
   font-size: 12px;
   color: var(--tg-hint-color);
-  line-height: 1.6;
+  line-height: 1.65;
   margin-bottom: 14px;
 }
 
@@ -424,49 +447,96 @@ body {
 .steps-timeline {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
   position: relative;
-  padding-left: 10px;
 }
 
+/* We use precise line segments within each step-left instead of a single absolute line on the parent */
 .steps-timeline::before {
-  content: '';
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 17px;
-  width: 2px;
-  background-color: rgba(99, 102, 241, 0.2);
+  display: none !important;
 }
 
 .timeline-step {
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
+  gap: 14px;
   position: relative;
+  padding: 10px 0;
+}
+
+.step-left {
+  position: relative;
+  width: 20px;
+  flex-shrink: 0;
+  align-self: stretch; /* stretches to full height of timeline-step */
+}
+
+.step-line-first {
+  position: absolute;
+  top: 50%;
+  bottom: -10px;
+  width: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(36, 129, 204, 0.15);
+  z-index: 1;
+}
+
+.step-line-middle {
+  position: absolute;
+  top: -10px;
+  bottom: -10px;
+  width: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(36, 129, 204, 0.15);
+  z-index: 1;
+}
+
+.step-line-last {
+  position: absolute;
+  top: -10px;
+  bottom: 50%;
+  width: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(36, 129, 204, 0.15);
+  z-index: 1;
+}
+
+.premium-timeline .step-line-first,
+.premium-timeline .step-line-middle,
+.premium-timeline .step-line-last {
+  background-color: rgba(99, 102, 241, 0.25);
 }
 
 .step-num {
-  width: 16px;
-  height: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background-color: var(--tg-secondary-bg-color);
-  border: 1px solid #6366f1;
-  font-size: 9px;
+  background-color: var(--tg-secondary-bg-color, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--tg-theme-link-color, #2481cc);
+  font-size: 11px;
   font-weight: 700;
-  color: #6366f1;
+  color: var(--tg-theme-link-color, #2481cc);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
-  z-index: 1;
+  z-index: 2; /* opaque circle stays over line segments */
+  box-sizing: border-box;
 }
 
 .step-text {
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 13.5px;
+  line-height: 1.65;
   color: var(--tg-text-color);
+  padding: 4px 0;
+  margin: 0;
+  flex: 1;
 }
 
 .warning-box {
@@ -489,7 +559,21 @@ body {
 
 /* Действие бронирования (для веба) */
 .booking-action-bar {
-  margin-top: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  padding: 40px 20px 24px;
+  background: linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent);
+  z-index: 100;
+  margin: 0;
+  pointer-events: none;
+}
+
+.booking-action-bar > * {
+  pointer-events: auto;
 }
 
 .order-button {
@@ -526,4 +610,75 @@ body {
   .session-card {
     border-color: rgba(255, 255, 255, 0.05);
   }
+}
+
+.premium-past-lives {
+  --tg-theme-bg-color: #faf8fd;
+  --tg-theme-secondary-bg-color: #ffffff;
+  --tg-theme-text-color: #1e293b;
+  --tg-theme-hint-color: #64748b;
+  --tg-theme-link-color: #6366f1;
+}
+
+.theme-dark .premium-past-lives {
+  --tg-theme-bg-color: #0b0b13;
+  --tg-theme-secondary-bg-color: #13111c;
+  --tg-theme-text-color: #f8fafc;
+  --tg-theme-hint-color: #94a3b8;
+  --tg-theme-link-color: #818cf8;
+}
+
+.premium-past-lives .info-card,
+.premium-past-lives .steps-card,
+.premium-past-lives .benefits-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 255, 0.95) 100%);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.theme-dark .premium-past-lives .info-card,
+.theme-dark .premium-past-lives .steps-card,
+.theme-dark .premium-past-lives .benefits-card {
+  background: linear-gradient(160deg, rgba(30, 27, 75, 0.5) 0%, rgba(13, 14, 21, 0.8) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.premium-past-lives .detail-price-tag {
+  background: linear-gradient(to right, #ea580c, #d97706);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(234, 88, 12, 0.2);
+}
+
+.theme-dark .premium-past-lives .detail-price-tag {
+  background: linear-gradient(to right, #fde047, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+}
+
+.premium-past-lives h2, .premium-past-lives h3 {
+  color: #1e293b;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.theme-dark .premium-past-lives h2, .theme-dark .premium-past-lives h3 {
+  color: #e2e8f0;
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-premium {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: white !important;
 }

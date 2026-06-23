@@ -34,6 +34,16 @@ import energyCleansingImg from "../img/snyatie-energeticheskih-blokov.webp";
 // Get Telegram WebApp object
 const tg = (window as any).Telegram?.WebApp;
 
+const BadgeGlass = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
+  const baseClasses = "bg-black/40 backdrop-blur-md rounded-full font-mono font-medium tracking-wide text-white uppercase flex items-center shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.1)] font-sans border border-white/10 px-3.5 py-1.5 text-xs gap-1.5";
+  
+  return (
+    <span className={`${baseClasses} ${className}`} style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+      {children}
+    </span>
+  );
+};
+
 export default function App() {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
@@ -47,7 +57,9 @@ export default function App() {
       userAgent: navigator.userAgent
     });
 
-    if (tg) {
+    const isActualTelegram = tg && tg.platform && tg.platform !== "unknown";
+    
+    if (isActualTelegram) {
       setIsTelegram(true);
       tg.ready();
       tg.expand();
@@ -103,14 +115,14 @@ export default function App() {
     updateRootTheme(nextTheme);
     
     // Attempt haptic click
-    if (tg?.HapticFeedback) {
+    if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
       tg.HapticFeedback.impactOccurred("light");
     }
   };
 
   // Setup/Tear down Telegram BackButton & MainButton when navigating
   useEffect(() => {
-    if (!tg) return;
+    if (!isTelegram || !tg) return;
 
     if (selectedSession) {
       // Configure Native Telegram Back Button
@@ -156,7 +168,7 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     // Native Telegram Haptic impact
-    if (tg?.HapticFeedback) {
+    if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
       tg.HapticFeedback.impactOccurred("medium");
     }
   };
@@ -176,7 +188,7 @@ export default function App() {
     setBookingStatus(null);
     
     // Native Telegram Haptic impact
-    if (tg?.HapticFeedback) {
+    if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
       tg.HapticFeedback.impactOccurred("light");
     }
   };
@@ -187,7 +199,7 @@ export default function App() {
       sessionPrice: session.price
     });
 
-    if (tg?.HapticFeedback) {
+    if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
       tg.HapticFeedback.notificationOccurred("success");
     }
 
@@ -341,7 +353,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen pb-24 relative select-none bg-[var(--tg-theme-secondary-bg-color)] transition-colors duration-300">
+    <div className={`min-h-screen pb-24 relative select-none bg-[var(--tg-theme-secondary-bg-color)] transition-colors duration-300 ${selectedSession?.id === 'past-lives' ? 'premium-past-lives' : ''}`}>
       
       {/* Background ambient lighting glows for high-end aesthetic */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 transition-colors duration-300">
@@ -360,18 +372,18 @@ export default function App() {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-md mx-auto px-4 pt-5 pb-10" id="tma-container">
+      <div className="max-w-md mx-auto px-4 pt-5 pb-24" id="tma-container">
         
         {/* SHOP HEADER */}
         {!selectedSession && (
           <header className="bg-[var(--tg-theme-bg-color)] p-6 rounded-3xl border border-black/5 dark:border-white/5 flex flex-col justify-between items-center text-center mb-6 shadow-sm relative overflow-hidden" id="main-header">
-            <span className="text-[10px] font-mono tracking-[0.15em] uppercase text-indigo-500/90 font-bold px-3 py-1 bg-[var(--tg-theme-secondary-bg-color)] rounded-full mb-3" id="badge-main">
+            <BadgeGlass className="mb-3" id="badge-main">
               ✨ Каталог услуг
-            </span>
+            </BadgeGlass>
             <h1 className="text-3xl font-extrabold tracking-tight text-[var(--tg-theme-text-color)]" id="title-main">
               Сеансы и цены
             </h1>
-            <p className="text-[var(--tg-theme-hint-color)] mt-2 max-w-md mx-auto leading-relaxed" id="desc-main" style={{ fontSize: "14px" }}>
+            <p className="text-[var(--tg-theme-hint-color)] mt-2 max-w-md mx-auto leading-[1.65]" id="desc-main" style={{ fontSize: "14px" }}>
               Выберите подходящий вам метод. Глубокая работа с подсознанием, которая поможет найти первопричины ваших запросов и вернуть внутреннюю гармонию.
             </p>
           </header>
@@ -406,12 +418,12 @@ export default function App() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                     
                     {/* Category Label */}
-                    <span className="absolute top-3 left-3 bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-mono font-medium tracking-wide text-neutral-200 border border-white/15 uppercase flex items-center gap-1.5 font-sans">
+                    <BadgeGlass className="absolute top-3 left-3">
                       {getSessionIcon(session.id, "w-3 h-3 shrink-0")} {session.badge}
-                    </span>
+                    </BadgeGlass>
 
                     {/* Price Tag badge inside image */}
-                    <div className="absolute bottom-3 right-3 bg-indigo-600/90 backdrop-blur-md px-3.5 py-1 rounded-xl border border-white/20 text-white font-semibold text-sm price-tag">
+                    <div className="absolute bottom-3 right-3 bg-black/40 backdrop-blur-md px-3.5 py-1 rounded-xl border border-white/15 text-white font-semibold text-sm shadow-md">
                       {session.price.toLocaleString("ru-RU")} ₽
                     </div>
 
@@ -430,7 +442,7 @@ export default function App() {
                     </div>
                     
                     <p 
-                      className={`text-[var(--tg-theme-hint-color)] leading-relaxed mt-2 ${session.customFontSize && session.customFontSize.startsWith("text-") ? session.customFontSize : (!session.customFontSize ? "text-xs" : "")}`}
+                      className={`text-[var(--tg-theme-hint-color)] leading-[1.65] mt-2 ${session.customFontSize && session.customFontSize.startsWith("text-") ? session.customFontSize : (!session.customFontSize ? "text-xs" : "")}`}
                       style={{ fontSize: session.customFontSize && !session.customFontSize.startsWith("text-") ? session.customFontSize : undefined }}
                     >
                       {session.shortDesc}
@@ -466,9 +478,9 @@ export default function App() {
                 <button
                   id="btn-back-browser"
                   onClick={handleBack}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--tg-theme-link-color)] hover:opacity-80 hover:scale-105 active:scale-95 transition-all p-1 cursor-pointer"
+                  className="absolute top-8 left-8 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/10 hover:bg-black/50 transition-all cursor-pointer shadow-md"
                 >
-                  <ArrowLeft className="w-4 h-4" /> Назад в каталог
+                  <ArrowLeft className="w-4 h-4" />
                 </button>
               )}
 
@@ -477,37 +489,36 @@ export default function App() {
                 {renderSessionSvg(selectedSession.id)}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
                 
-                {/* Floating symbol and quick info */}
-                <span className="absolute top-4 left-4 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide text-white border border-white/10 uppercase flex items-center gap-1.5 font-sans">
-                  {getSessionIcon(selectedSession.id, "w-3.5 h-3.5 shrink-0")} {selectedSession.badge}
-                </span>
+                {/* Floating symbol, quick info and online status */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                  <BadgeGlass>
+                    {getSessionIcon(selectedSession.id, "w-3.5 h-3.5 shrink-0")} {selectedSession.badge}
+                  </BadgeGlass>
+                  
+                  <span className="text-[12px] font-bold text-amber-400 flex items-center gap-1.5 drop-shadow-md pr-1">
+                    <span className="w-[6px] h-[6px] -translate-y-[0.5px] rounded-full bg-emerald-400 animate-pulse shrink-0 shadow-[0_0_5px_rgba(52,211,153,0.8)]" />
+                    <span className="leading-none">Онлайн сеанс</span>
+                  </span>
+                </div>
 
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <h2 className="text-2xl font-extrabold font-display leading-tight">
-                      {selectedSession.title}
-                    </h2>
-                  </div>
-                  <div className="flex items-center gap-3 text-xs text-white/90">
-                    <span className="font-semibold text-amber-300 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      Личный сеанс онлайн
-                    </span>
-                  </div>
+                  <h2 className="title-overlay text-2xl font-extrabold font-display leading-tight pb-0.5 w-full pr-1">
+                    {selectedSession.title}
+                  </h2>
                 </div>
               </div>
 
               {/* Booking fallbacks check inside standard browsers */}
               {bookingStatus && (
-                <div id="booking-alert-box" className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-xs">
+                <div id="booking-alert-box" className="p-4 rounded-xl bg-[var(--tg-theme-link-color)] opacity-90 border text-xs" style={{ borderColor: "var(--tg-theme-link-color)", backgroundColor: "color-mix(in srgb, var(--tg-theme-link-color) 10%, transparent)" }}>
                   <div className="flex items-start gap-2">
-                    <Calendar className="w-4 h-4 text-indigo-400 shrink-0 mt-0.5" />
+                    <Calendar className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-bold text-[var(--tg-theme-text-color)]">Запрос на бронирование отправлен!</h4>
                       <p className="text-[var(--tg-theme-hint-color)] mt-1">
                         Для согласования времени свяжитесь с психотерапевтом в Telegram:
                       </p>
-                      <a href="https://t.me/your_telegram_username" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-indigo-400 font-bold mt-2 hover:underline">
+                      <a href="https://t.me/your_telegram_username" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[var(--tg-theme-link-color)] font-bold mt-2 hover:underline">
                         <MessageCircle className="w-3.5 h-3.5" /> @your_telegram_username
                       </a>
                     </div>
@@ -517,14 +528,14 @@ export default function App() {
 
               {/* Price Block and description card */}
               <div className="card p-5 rounded-3xl shadow-sm space-y-4">
-                <div className="flex justify-between items-center pb-3 border-b border-neutral-200/50 dark:border-neutral-800/15">
-                  <div>
-                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Стоимость</span>
-                    <p className="text-[26px] font-bold price-tag">{selectedSession.price.toLocaleString("ru-RU")} ₽</p>
+                <div className="pb-3 border-b border-neutral-200/50 dark:border-neutral-800/15">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)] block leading-none">Стоимость</span>
+                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)] block leading-none text-right">Длительность</span>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)]">Длительность</span>
-                    <p className="text-[15px] font-medium text-[var(--tg-theme-text-color)] mt-1 flex items-center gap-1 justify-center">
+                  <div className="flex justify-between items-end">
+                    <p className="text-[26px] font-bold leading-none price-tag">{selectedSession.price.toLocaleString("ru-RU")} ₽</p>
+                    <p className="text-[15px] font-medium text-[var(--tg-theme-text-color)] flex items-center gap-1.5 justify-end leading-none translate-y-[-1px]">
                       <Clock className="w-4 h-4 text-[var(--tg-theme-link-color)]" /> {selectedSession.duration}
                     </p>
                   </div>
@@ -532,7 +543,7 @@ export default function App() {
 
                 <div className="space-y-2">
                   <span className="text-[11px] uppercase font-mono tracking-wider text-[var(--tg-theme-hint-color)] block">О сеансе</span>
-                  <p className="text-[14px] text-[var(--tg-theme-text-color)] leading-relaxed">
+                  <p className="text-[14px] text-[var(--tg-theme-text-color)] leading-[1.65] whitespace-pre-wrap">
                     {selectedSession.fullDesc}
                   </p>
                 </div>
@@ -541,11 +552,12 @@ export default function App() {
               {/* DETAILED WORKFLOW IN SESSION (Steps) */}
               <div className="card p-5 rounded-3xl shadow-sm space-y-4">
                 <div className="space-y-1">
-                  <h3 className="text-[16px] font-bold text-[var(--tg-theme-text-color)]">
-                    {selectedSession.longInfo.sectionTitle}
+                  <h3 className={`text-[16px] font-bold text-[var(--tg-theme-text-color)] flex items-start gap-2 ${!selectedSession.longInfo.sectionText ? 'mb-3' : ''}`}>
+                    <Sparkles className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
+                    <span>{selectedSession.longInfo.sectionTitle}</span>
                   </h3>
                   {selectedSession.longInfo.sectionText && (
-                    <p className="text-[14px] text-[var(--tg-theme-hint-color)] leading-relaxed">
+                    <p className="text-[14px] text-[var(--tg-theme-hint-color)] leading-[1.65]">
                       {selectedSession.longInfo.sectionText}
                     </p>
                   )}
@@ -555,15 +567,30 @@ export default function App() {
                   <h4 className="text-[14px] font-semibold text-[var(--tg-theme-text-color)]">
                     {selectedSession.longInfo.stepsTitle}
                   </h4>
-                  <div className="space-y-3 relative before:absolute before:left-2.5 before:top-2.5 before:bottom-2.5 before:w-0.5 before:bg-[rgba(36,129,204,0.2)]">
+                  <div className="flex flex-col pt-1">
                     {selectedSession.longInfo.steps.map((step, idx) => (
-                      <div key={idx} className="flex gap-3 pl-1 items-start relative">
-                        <div className="w-5 h-5 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border border-[var(--tg-theme-link-color)] text-[12px] font-bold text-[var(--tg-theme-link-color)] flex items-center justify-center shrink-0 mt-0.5 z-10">
-                          {idx + 1}
+                      <div key={idx} className="flex gap-4.5 pl-0.5 relative py-2.5">
+                        <div className="relative w-5 shrink-0 self-stretch">
+                          {/* Continuous, overlapping seamless vertical line segments */}
+                          {selectedSession.longInfo.steps.length > 1 && (
+                            idx === 0 ? (
+                              <div className="absolute top-1/2 bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                            ) : idx === selectedSession.longInfo.steps.length - 1 ? (
+                              <div className="absolute top-[-10px] bottom-1/2 w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                            ) : (
+                              <div className="absolute top-[-10px] bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                            )
+                          )}
+                          
+                          {/* Step Badge aligned exactly with the center of the text */}
+                          <div className="w-5 h-5 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border text-[11px] font-bold flex items-center justify-center shrink-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)]">
+                            {idx + 1}
+                          </div>
                         </div>
-                        <p className="text-[14px] text-[var(--tg-theme-text-color)] leading-relaxed">
-                          {step}
-                        </p>
+                        <p 
+                          className="text-[13.5px] text-[var(--tg-theme-text-color)] leading-[1.65] py-0.5 flex-1"
+                          dangerouslySetInnerHTML={{ __html: step }}
+                        />
                       </div>
                     ))}
                   </div>
@@ -572,24 +599,28 @@ export default function App() {
 
               {/* WHAT CLIENT GETS (Benefits) */}
               <div className="card p-5 rounded-3xl shadow-sm space-y-3">
-                <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] flex items-center gap-1.5">
+                <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] flex items-start gap-2">
                   {selectedSession.id === "past-lives" ? (
-                    "Частые запросы на просмотр прошлых жизней"
+                    <>
+                      <Compass className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
+                      <span>Частые запросы на просмотр прошлых воплощений:</span>
+                    </>
                   ) : (
                     <>
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Результаты сеанса:
+                      <CheckCircle2 className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
+                      <span>Результаты сеанса:</span>
                     </>
                   )}
                 </h3>
                 {selectedSession.id === "past-lives" && (
-                  <p className="text-[13px] text-[var(--tg-theme-hint-color)] leading-relaxed mb-2">
+                  <p className="text-[13px] text-[var(--tg-theme-hint-color)] leading-[1.65] mb-2">
                     Жизнь часто дает нам подсказки. Если вы замечаете в своей жизни следующие сценарии, корень проблемы может лежать за пределами текущего воплощения.
                   </p>
                 )}
                 <ul className="space-y-2.5 text-[14px] text-[var(--tg-theme-text-color)]" id="benefits-list">
                   {selectedSession.benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-start gap-2 leading-relaxed">
-                      <span className="text-emerald-500 text-[14px] mt-1 shrink-0">✦</span>
+                    <li key={i} className="flex items-start gap-2 leading-[1.65]">
+                      <span className="text-[var(--tg-theme-link-color)] text-[14px] mt-[3.5px] leading-none shrink-0">✦</span>
                       <span>{benefit}</span>
                     </li>
                   ))}
@@ -599,13 +630,14 @@ export default function App() {
               {/* EXAMPLES OF REQUESTS ON SCREENSHOT */}
               {selectedSession.exampleRequests && (
                 <div className="card p-5 rounded-3xl shadow-sm space-y-4">
-                  <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] leading-snug">
-                    {selectedSession.exampleRequests.title}
+                  <h3 className="text-[16px] font-bold tracking-tight text-[var(--tg-theme-text-color)] leading-snug flex items-start gap-2">
+                    <MessageCircle className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
+                    <span>{selectedSession.exampleRequests.title}</span>
                   </h3>
                   <ul className="space-y-2.5 text-[13.5px] text-[var(--tg-theme-text-color)]" id="example-requests-list">
                     {selectedSession.exampleRequests.columns.flat().map((req, reqIdx) => (
-                      <li key={reqIdx} className="flex items-start gap-2.5 leading-relaxed">
-                        <span className="text-indigo-400 text-[18px] leading-none -mt-[2px] shrink-0 select-none">•</span>
+                      <li key={reqIdx} className="flex items-start gap-2.5 leading-[1.65]">
+                        <span className="text-[var(--tg-theme-link-color)] text-[18px] leading-none mt-[3.5px] shrink-0 select-none">•</span>
                         <span className="opacity-90">{req}</span>
                       </li>
                     ))}
@@ -616,18 +648,27 @@ export default function App() {
                {/* Desktop / browser Simulation booking Button.
                   (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}
               {!isTelegram && (
-                <div className="pt-2">
-                  <button
-                    id="btn-book-browser"
-                    onClick={() => handleBooking(selectedSession)}
-                    className="w-full py-4 px-6 rounded-2xl font-bold text-sm shadow-md bg-[var(--tg-theme-button-color)] hover:opacity-90 active:scale-[0.98] text-[var(--tg-theme-button-text-color)] flex items-center justify-center gap-2 transition-all cursor-pointer"
+                <>
+                  {/* Invisible spacer to allow scrolling past the fixed button */}
+                  <div className="h-32"></div>
+                  <div 
+                    className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
+                    style={{ background: "linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent)" }}
                   >
-                    <MessageCircle className="w-4 h-4" /> Забронировать за {selectedSession.price.toLocaleString("ru-RU")} ₽
-                  </button>
-                  <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-2">
-                    В Telegram Mini App для покупки будет использована нативная кнопка MainButton
-                  </p>
-                </div>
+                    <div className="max-w-md mx-auto px-4 pb-6 pt-10 pointer-events-auto">
+                      <button
+                        id="btn-book-browser"
+                        onClick={() => handleBooking(selectedSession)}
+                        className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98] ${selectedSession.id === 'past-lives' ? 'btn-premium text-white' : 'bg-[var(--tg-theme-button-color)] hover:opacity-90 text-[var(--tg-theme-button-text-color)] shadow-md'}`}
+                      >
+                        <MessageCircle className="w-4 h-4" /> Забронировать за {selectedSession.price.toLocaleString("ru-RU")} ₽
+                      </button>
+                      <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-3">
+                        В Telegram Mini App для покупки используется нативная панель
+                      </p>
+                    </div>
+                  </div>
+                </>
               )}
             </motion.div>
           )}
@@ -648,7 +689,7 @@ export default function App() {
           </span>
         </div>
         
-        <p className="text-[10px] text-neutral-400 leading-relaxed">
+        <p className="text-[10px] text-neutral-400 leading-[1.65]">
           Этот тулбар виден только в браузере для демонстрации адаптивности цвета и тем. Скрыт внутри Telegram.
         </p>
 
@@ -674,7 +715,7 @@ export default function App() {
               id="simulate-tg-status"
               onClick={() => {
                 setIsTelegram(!isTelegram);
-                if (tg?.HapticFeedback) {
+                if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
                   tg.HapticFeedback.impactOccurred("medium");
                 }
               }}

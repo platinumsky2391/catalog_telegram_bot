@@ -353,7 +353,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen pb-24 relative select-none bg-[var(--tg-theme-secondary-bg-color)] transition-colors duration-300 ${selectedSession?.id === 'past-lives' ? 'premium-past-lives' : ''}`}>
+    <div className={`min-h-screen pb-4 relative select-none bg-[var(--tg-theme-secondary-bg-color)] transition-colors duration-300 ${selectedSession?.id === 'past-lives' ? 'premium-past-lives' : ''}`}>
       
       {/* Background ambient lighting glows for high-end aesthetic */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10 transition-colors duration-300">
@@ -372,7 +372,7 @@ export default function App() {
       </div>
 
       {/* Main Container */}
-      <div className="max-w-md mx-auto px-4 pt-5 pb-24" id="tma-container">
+      <div className="max-w-md mx-auto px-4 pt-5 pb-6" id="tma-container">
         
         {/* SHOP HEADER */}
         {!selectedSession && (
@@ -643,12 +643,12 @@ export default function App() {
                 </div>
               )}
 
-               {/* Desktop / browser Simulation booking Button.
+              {/* Desktop / browser Simulation booking Button.
                   (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}
               {!isTelegram && (
                 <>
-                  {/* Invisible spacer to allow scrolling past the fixed button */}
-                  <div className="h-32"></div>
+                  {/* Invisible spacer to allow scrolling past the fixed button so it looks like a standard space-y-5 gap */}
+                  <div className="h-[104px]"></div>
                   <div 
                     className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
                     style={{ background: "linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent)" }}

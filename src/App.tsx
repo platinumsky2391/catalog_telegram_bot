@@ -473,16 +473,14 @@ export default function App() {
               className="space-y-5"
               id="detail-container"
             >
-              {/* Back Link navigation (for desktop/browser simulation fallback) */}
-              {!isTelegram && (
-                <button
-                  id="btn-back-browser"
-                  onClick={handleBack}
-                  className="absolute top-8 left-8 z-20 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/10 hover:bg-black/50 transition-all cursor-pointer shadow-md"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-              )}
+              {/* Back navigation */}
+              <button
+                onClick={handleBack}
+                className="flex items-center gap-1.5 text-[var(--tg-theme-link-color)] hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Вернуться</span>
+              </button>
 
               {/* Cover visual Banner with rich SVG artwork */}
               <div className="relative h-56 rounded-3xl overflow-hidden border border-neutral-200/40 dark:border-neutral-800/40 shadow-md">

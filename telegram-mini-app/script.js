@@ -591,55 +591,14 @@ function bookSession() {
     tg.HapticFeedback.notificationOccurred("success");
   }
 
-  const openChat = () => {
-    Logger.trackConversion("TMA_BOOKING_LINK_OPEN", curSession.price, {
-      sessionId: curSession.id,
-      sessionTitle: curSession.title
-    });
-    if (tg && typeof tg.openTelegramLink === 'function') {
-      tg.openTelegramLink("https://t.me/meta_manoir");
-    } else {
-      window.open("https://t.me/meta_manoir", "_blank");
-    }
-  };
-
-  if (tg && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.2')) {
-    Logger.info("BOOKING_POPUP_SHOWN", {
-      sessionId: curSession.id,
-      sessionPrice: curSession.price
-    });
-
-    tg.showPopup({
-      title: "Подтверждение бронирования",
-      message: `Желаете забронировать сеанс «${curSession.title}»? Вы будете перенаправлены к мастеру для согласования свободного времени.`,
-      buttons: [
-        { id: "confirm", type: "default", text: "Связаться в Telegram" },
-        { id: "cancel", type: "cancel", text: "Назад" }
-      ]
-    }, (btnId) => {
-      Logger.info("BOOKING_POPUP_ACTION", {
-        actionId: btnId,
-        sessionId: curSession.id
-      });
-
-      if (btnId === "confirm") {
-        openChat();
-      } else {
-        Logger.info("BOOKING_CANCELLED", {
-          sessionId: curSession.id
-        });
-      }
-    });
+  Logger.trackConversion("TMA_BOOKING_LINK_OPEN", curSession.price, {
+    sessionId: curSession.id,
+    sessionTitle: curSession.title
+  });
+  if (tg && typeof tg.openTelegramLink === 'function') {
+    tg.openTelegramLink("https://t.me/meta_manoir");
   } else {
-    // Браузерный алерт-фоллбек
-    const confirmed = window.confirm(`Желаете забронировать сеанс «${curSession.title}»? Нажмите ОК для связи со мной.`);
-    if (confirmed) {
-      openChat();
-    } else {
-      Logger.info("BOOKING_CANCELLED", {
-        sessionId: curSession.id
-      });
-    }
+    window.open("https://t.me/meta_manoir", "_blank");
   }
 }
 

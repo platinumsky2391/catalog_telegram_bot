@@ -203,70 +203,15 @@ export default function App() {
       tg.HapticFeedback.notificationOccurred("success");
     }
 
-    const openChat = () => {
-      AnalyticalLogger.trackConversion("TMA_BOOKING_LINK_OPEN", session.price, {
-        sessionId: session.id,
-        sessionTitle: session.title
-      });
+    AnalyticalLogger.trackConversion("TMA_BOOKING_LINK_OPEN", session.price, {
+      sessionId: session.id,
+      sessionTitle: session.title
+    });
 
-      // Send confirmation event to our backend server
-      fetch("/api/book", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          sessionId: session.id,
-          title: session.title,
-          price: session.price,
-          user: tg?.initDataUnsafe?.user || null
-        })
-      }).catch(err => {
-        AnalyticalLogger.error("API_BOOK_ERROR", err);
-      });
-
-      if (tg && typeof tg.openTelegramLink === 'function') {
-        tg.openTelegramLink("https://t.me/meta_manoir");
-      } else {
-        window.open("https://t.me/meta_manoir", "_blank");
-      }
-    };
-
-    if (tg && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.2')) {
-      // Build interactive popup in Telegram
-      AnalyticalLogger.info("BOOKING_POPUP_SHOWN", {
-        sessionId: session.id,
-        sessionPrice: session.price
-      });
-
-      tg.showPopup({
-        title: "Подтверждение бронирования",
-        message: `Вы выбрали сеанс «${session.title}». Нажмите продолжить, чтобы перейти к диалогу со мной.`,
-        buttons: [
-          { id: "ok", type: "default", text: "Продолжить" },
-          { id: "cancel", type: "cancel", text: "Отмена" }
-        ]
-      }, (buttonId: string) => {
-        AnalyticalLogger.info("BOOKING_POPUP_ACTION", {
-          actionId: buttonId,
-          sessionId: session.id
-        });
-
-        if (buttonId === "ok") {
-          openChat();
-        } else {
-          AnalyticalLogger.info("BOOKING_CANCELLED", {
-            sessionId: session.id
-          });
-        }
-      });
+    if (tg && typeof tg.openTelegramLink === 'function') {
+      tg.openTelegramLink("https://t.me/meta_manoir");
     } else {
-      const confirmed = window.confirm(`Вы выбрали сеанс «${session.title}». Нажмите ОК, чтобы перейти к диалогу со мной.`);
-      if (confirmed) {
-        openChat();
-      } else {
-        AnalyticalLogger.info("BOOKING_CANCELLED", {
-          sessionId: session.id
-        });
-      }
+      window.open("https://t.me/meta_manoir", "_blank");
     }
   };
 

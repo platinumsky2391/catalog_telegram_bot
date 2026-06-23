@@ -382,6 +382,7 @@ body {
   font-size: 12px;
   line-height: 1.65;
   color: var(--tg-text-color);
+  white-space: pre-wrap;
 }
 
 .card-title-with-icon {

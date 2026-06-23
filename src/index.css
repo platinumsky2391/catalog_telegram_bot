@@ -59,7 +59,7 @@ body {
   font-weight: 700;
 }
 
-.premium-past-lives {
+.premium-session {
   --tg-theme-bg-color: #faf8fd;
   --tg-theme-secondary-bg-color: #ffffff;
   --tg-theme-text-color: #1e293b;
@@ -67,7 +67,7 @@ body {
   --tg-theme-link-color: #ea580c;
 }
 
-.theme-dark .premium-past-lives {
+.theme-dark .premium-session {
   --tg-theme-bg-color: #0b0b13;
   --tg-theme-secondary-bg-color: #13111c;
   --tg-theme-text-color: #f8fafc;
@@ -75,14 +75,14 @@ body {
   --tg-theme-link-color: #818cf8;
 }
 
-.premium-past-lives .title-overlay {
+.premium-session .title-overlay {
   background: none !important;
   -webkit-text-fill-color: #ffffff !important;
   color: #ffffff !important;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.premium-past-lives .card {
+.premium-session .card {
   background: linear-gradient(160deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 255, 0.95) 100%);
   border: 1px solid rgba(99, 102, 241, 0.2);
   box-shadow: 0 8px 32px rgba(99, 102, 241, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.7);
@@ -90,13 +90,13 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
-.theme-dark .premium-past-lives .card {
+.theme-dark .premium-session .card {
   background: linear-gradient(160deg, rgba(30, 27, 75, 0.5) 0%, rgba(13, 14, 21, 0.8) 100%);
   border: 1px solid rgba(139, 92, 246, 0.15);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-.premium-past-lives .price-tag {
+.premium-session .price-tag {
   background: linear-gradient(to right, #ea580c, #d97706);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -104,7 +104,7 @@ body {
   text-shadow: 0 2px 10px rgba(234, 88, 12, 0.2);
 }
 
-.theme-dark .premium-past-lives .price-tag {
+.theme-dark .premium-session .price-tag {
   background: linear-gradient(to right, #fde047, #f59e0b);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -112,14 +112,14 @@ body {
   text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
 }
 
-.premium-past-lives h2, .premium-past-lives h3, .premium-past-lives h4 {
+.premium-session h2, .premium-session h3, .premium-session h4 {
   color: #1e293b;
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.theme-dark .premium-past-lives h2, .theme-dark .premium-past-lives h3, .theme-dark .premium-past-lives h4 {
+.theme-dark .premium-session h2, .theme-dark .premium-session h3, .theme-dark .premium-session h4 {
   color: #e2e8f0;
   background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
   -webkit-background-clip: text;

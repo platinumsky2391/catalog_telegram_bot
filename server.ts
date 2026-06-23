@@ -55,7 +55,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
     });
 
     // Setup bot launch model
-    if (process.env.NODE_ENV === "production" && process.env.APP_URL) {
+    if (process.env.APP_URL) {
       const appUrl = process.env.APP_URL;
       const secretPath = `/api/telegram-webhook-${telegramToken.substring(0, 10)}`;
       
@@ -65,7 +65,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
         .then(() => console.log("[INFO] Webhook успешно установлен!"))
         .catch(err => console.error("[ERROR] Не удалось установить Webhook:", err));
     } else {
-      console.log("[INFO] Запуск Telegram Бота в режиме Long Polling (локальная разработка)...");
+      console.log("[INFO] APP_URL не задан. Запуск Telegram Бота в режиме Long Polling (локальная разработка)...");
       // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict
       bot.telegram.deleteWebhook({ drop_pending_updates: true })
         .then(() => {

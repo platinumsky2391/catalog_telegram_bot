@@ -448,11 +448,11 @@ export default function App() {
                       {session.shortDesc}
                     </p>
 
-                    <div className="mt-4 pt-3 border-t border-neutral-200/30 dark:border-neutral-800/30 flex justify-between items-center">
+                    <div className="mt-4 pt-3 border-t border-neutral-200/30 dark:border-neutral-800/30 flex justify-between items-baseline">
                       <span className="text-[10px] font-mono text-[var(--tg-theme-hint-color)] uppercase tracking-wider">
                         Нажмите для подробностей
                       </span>
-                      <span className="text-[var(--tg-theme-link-color)] text-xs font-medium flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                      <span className="text-[var(--tg-theme-link-color)] text-xs font-medium group-hover:translate-x-1 transition-transform">
                         Подробнее &rarr;
                       </span>
                     </div>

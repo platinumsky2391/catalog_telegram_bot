@@ -212,9 +212,9 @@ export default function App() {
 
       tg.showPopup({
         title: "Подтверждение бронирования",
-        message: `Вы выбрали сеанс «${session.title}». Нажмите продолжить, чтобы связаться с мастером в личных сообщениях для выбора даты.`,
+        message: `Вы выбрали сеанс «${session.title}». Нажмите продолжить, чтобы перейти к диалогу со мной.`,
         buttons: [
-          { id: "ok", type: "default", text: "Связаться в Telegram" },
+          { id: "ok", type: "default", text: "Продолжить" },
           { id: "cancel", type: "cancel", text: "Отмена" }
         ]
       }, (buttonId: string) => {
@@ -678,54 +678,56 @@ export default function App() {
 
       {/* TOP FLOATING ENVIRONMENT BAR (FOR DEVELOPER DEMONSTRATION & DESIGN REVIEW)
           This simulated panel is hidden when running inside real Telegram context */}
-      <div className="fixed bottom-4 left-4 right-4 max-w-xs mx-auto bg-neutral-900/90 text-white rounded-2xl p-3 shadow-2xl backdrop-blur-md border border-neutral-700/50 flex flex-col gap-2 z-50 text-xs" id="demo-controls">
-        <div className="flex justify-between items-center">
-          <span className="font-bold flex items-center gap-1.5 text-indigo-300">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            TMA Симулятор
-          </span>
-          <span className="text-[10px] px-1.5 py-0.5 bg-neutral-800 rounded font-mono text-neutral-400">
-            {isTelegram ? "Telegram Client" : "Разработка (Web)"}
-          </span>
-        </div>
-        
-        <p className="text-[10px] text-neutral-400 leading-[1.65]">
-          Этот тулбар виден только в браузере для демонстрации адаптивности цвета и тем. Скрыт внутри Telegram.
-        </p>
+      {!isTelegram && (
+        <div className="fixed bottom-4 left-4 right-4 max-w-xs mx-auto bg-neutral-900/90 text-white rounded-2xl p-3 shadow-2xl backdrop-blur-md border border-neutral-700/50 flex flex-col gap-2 z-50 text-xs" id="demo-controls">
+          <div className="flex justify-between items-center">
+            <span className="font-bold flex items-center gap-1.5 text-indigo-300">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              TMA Симулятор
+            </span>
+            <span className="text-[10px] px-1.5 py-0.5 bg-neutral-800 rounded font-mono text-neutral-400">
+              {isTelegram ? "Telegram Client" : "Разработка (Web)"}
+            </span>
+          </div>
+          
+          <p className="text-[10px] text-neutral-400 leading-[1.65]">
+            Этот тулбар виден только в браузере для демонстрации адаптивности цвета и тем. Скрыт внутри Telegram.
+          </p>
 
-        <div className="flex gap-2.5 mt-1 border-t border-neutral-800 pt-2">
-          <button 
-            id="toggle-simulator-theme"
-            onClick={toggleTheme}
-            className="flex-1 py-1.5 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 active:scale-95 transition-all text-[11px] font-medium flex items-center justify-center gap-1.5"
-          >
-            {themeMode === "light" ? (
-              <>
-                <Moon className="w-3.5 h-3.5 text-indigo-400" /> Тёмная тема
-              </>
-            ) : (
-              <>
-                <Sun className="w-3.5 h-3.5 text-amber-400" /> Светлая тема
-              </>
-            )}
-          </button>
-
-          {!isTelegram && (
+          <div className="flex gap-2.5 mt-1 border-t border-neutral-800 pt-2">
             <button 
-              id="simulate-tg-status"
-              onClick={() => {
-                setIsTelegram(!isTelegram);
-                if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
-                  tg.HapticFeedback.impactOccurred("medium");
-                }
-              }}
-              className="py-1.5 px-2.5 rounded-lg bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-[10px] font-mono"
+              id="toggle-simulator-theme"
+              onClick={toggleTheme}
+              className="flex-1 py-1.5 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 active:scale-95 transition-all text-[11px] font-medium flex items-center justify-center gap-1.5"
             >
-              Скрывать кнопки
+              {themeMode === "light" ? (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" /> Тёмная тема
+                </>
+              ) : (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400" /> Светлая тема
+                </>
+              )}
             </button>
-          )}
+
+            {!isTelegram && (
+              <button 
+                id="simulate-tg-status"
+                onClick={() => {
+                  setIsTelegram(!isTelegram);
+                  if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
+                    tg.HapticFeedback.impactOccurred("medium");
+                  }
+                }}
+                className="py-1.5 px-2.5 rounded-lg bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-[10px] font-mono"
+              >
+                Скрывать кнопки
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );

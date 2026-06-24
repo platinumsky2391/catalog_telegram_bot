@@ -109,14 +109,23 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
 
     // Setup bot launch model
     if (process.env.APP_URL) {
-      const appUrl = process.env.APP_URL;
+      let appUrl = process.env.APP_URL;
+      if (appUrl.endsWith('/')) {
+        appUrl = appUrl.slice(0, -1);
+      }
+      
+      const isAIStudio = appUrl.includes("run.app");
       const secretPath = `/api/telegram-webhook-${telegramToken.substring(0, 10)}`;
       
-      console.log(`[INFO] Настройка Webhook Telegram Бота: ${appUrl}${secretPath}`);
-      app.use(bot.webhookCallback(secretPath));
-      bot.telegram.setWebhook(`${appUrl}${secretPath}`)
-        .then(() => console.log("[INFO] Webhook успешно установлен!"))
-        .catch(err => console.error("[ERROR] Не удалось установить Webhook:", err));
+      if (!isAIStudio) {
+        console.log(`[INFO] Настройка Webhook Telegram Бота: ${appUrl}${secretPath}`);
+        app.use(bot.webhookCallback(secretPath));
+        bot.telegram.setWebhook(`${appUrl}${secretPath}`)
+          .then(() => console.log("[INFO] Webhook успешно установлен!"))
+          .catch(err => console.error("[ERROR] Не удалось установить Webhook:", err));
+      } else {
+        console.log(`[INFO] Запуск в AI Studio. Вебхук и Long Polling отключены, чтобы не перехватывать запросы рабочего сервера.`);
+      }
     } else {
       console.log("[INFO] APP_URL не задан. Запуск Telegram Бота в режиме Long Polling (локальная разработка)...");
       // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict

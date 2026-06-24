@@ -12,10 +12,18 @@ import dotenv from "dotenv";
 
 // Поиск .env файла вверх по дереву каталогов, а также по специфичному пути хостинга
 function findEnvFile(startDir: string, maxLevels = 10): string | null {
-  // Сначала проверяем специфичный путь, указанный для хостинга
-  const specificPath = path.resolve(startDir, "../bot-solien/.env");
-  if (fs.existsSync(specificPath)) {
-    return specificPath;
+  const possiblePaths = [
+    path.join(startDir, ".env"),
+    path.join(startDir, "../.env"),
+    path.join(startDir, "../../.env"),
+    path.join(startDir, "../bot-solien/.env"),
+    path.join(startDir, "../../bot-solien/.env"),
+  ];
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return p;
+    }
   }
 
   let currentDir = startDir;
@@ -61,15 +69,16 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
       const usernameTg = ctx.from?.username ? `(@${ctx.from.username})` : "";
       
       // Отправка уведомления администратору
-      const adminChannelId = process.env.ADMIN_CHANNEL_ID;
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
       if (adminChannelId) {
         try {
           await bot!.telegram.sendMessage(
             adminChannelId, 
             `В бот зашел новый пользователь: ${userName} ${usernameTg}`.trim()
           );
+          console.log(`[INFO] Уведомление о новом пользователе отправлено в канал: ${adminChannelId}`);
         } catch (err) {
-          console.error("[ERROR] Не удалось отправить уведомление в админ-канал. Проверьте ADMIN_CHANNEL_ID и права бота:", err);
+          console.error(`[ERROR] Не удалось отправить уведомление в админ-канал ${adminChannelId}. Проверьте права бота:`, err);
         }
       }
 

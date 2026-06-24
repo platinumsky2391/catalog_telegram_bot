@@ -1,0 +1,39 @@
+name: Deploy to Beget
+
+on:
+  push:
+    branches:
+      - main # Укажите ветку, при пуше в которую нужно обновлять сервер (main или master)
+  workflow_dispatch: # Позволяет запускать деплой вручную из интерфейса GitHub
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Оформление кода (Checkout)
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Установка Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Используем актуальную версию Node
+
+      - name: 📦 Установка зависимостей
+        run: npm ci || npm install
+
+      - name: 🏗 Сборка проекта (Build)
+        run: npm run build
+        # Команда сборки. Обычно собирает файлы в папку dist/
+
+      - name: 🚀 Деплой на Beget (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          # Папка, в которой лежит собранный проект (обычно dist/ или build/).
+          # Если вы загружаете не React, а обычную папку telegram-mini-app, замените на её название: ./telegram-mini-app/
+          local-dir: ./dist/ 
+          
+          # Путь на хостинге Beget, куда заливать файлы. 
+          server-dir: /bot-solien/public_html/

@@ -334,15 +334,19 @@ window.addEventListener("DOMContentLoaded", () => {
     tg.ready();
     tg.expand();
     
-    // Скрытие резервных кнопок только на мобильных платформах, так как там Telegram использует нативный MainButton
+    // Скрытие резервных HTML-кнопок
+    const isActualTelegram = tg.platform && tg.platform !== "unknown";
     const isMobileTelegram = ['android', 'android_x86', 'ios'].includes(tg.platform);
     
-    if (isMobileTelegram) {
-      const headerBtn = document.getElementById("back-btn-fallback");
+    if (isActualTelegram) {
       const inlineBtnBlock = document.getElementById("booking-action-bar");
       const catalogBtnBlock = document.getElementById("catalog-action-bar");
       if (inlineBtnBlock) inlineBtnBlock.style.display = "none";
       if (catalogBtnBlock) catalogBtnBlock.style.display = "none";
+    }
+
+    if (isMobileTelegram) {
+      const headerBtn = document.getElementById("back-btn-fallback");
       if (headerBtn) headerBtn.style.display = "none";
     }
 

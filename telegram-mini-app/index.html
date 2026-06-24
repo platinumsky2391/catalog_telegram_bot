@@ -173,14 +173,6 @@
 
     <div class="bottom-spacer" id="catalog-bottom-spacer" style="height: 96px;"></div>
 
-    <!-- Кнопка бронирования для каталога (Для браузера/ПК) -->
-    <div class="booking-action-bar" id="catalog-action-bar">
-      <button class="order-button" id="catalog-order-button" onclick="bookSession()">
-        Записаться на сеанс
-      </button>
-      <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
-    </div>
-
     <!-- СТРАНИЦА ДЕТАЛЬНОГО ОПИСАНИЯ (Скрыта по умолчанию) -->
     <section class="detail-page hidden" id="detail-page">
       <button class="back-btn-inline" id="back-btn-fallback" style="display: flex; align-items: center; gap: 6px; color: var(--tg-link-color); font-size: 14px; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; margin-bottom: 20px;">
@@ -253,15 +245,23 @@
       <div class="bottom-spacer" style="height: 96px;"></div>
     </section>
 
-    <!-- Кнопка бронирования внутри браузера/ПК (Для Telegram скрывается, так как используется нативная MainButton) -->
-    <div class="booking-action-bar hidden" id="booking-action-bar">
-      <button class="order-button" id="order-button">
-        Забронировать сеанс
-      </button>
-      <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
-    </div>
-
   </main>
+
+  <!-- Кнопка бронирования для каталога (Для браузера/ПК) -->
+  <div class="booking-action-bar" id="catalog-action-bar">
+    <button class="order-button" id="catalog-order-button" onclick="bookSession()">
+      Записаться на сеанс
+    </button>
+    <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
+  </div>
+
+  <!-- Кнопка бронирования внутри браузера/ПК (Для Telegram скрывается, так как используется нативная MainButton) -->
+  <div class="booking-action-bar hidden" id="booking-action-bar">
+    <button class="order-button" id="order-button">
+      Забронировать сеанс
+    </button>
+    <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
+  </div>
 
   <!-- Скрипт каталога -->
   <script src="script.js"></script>

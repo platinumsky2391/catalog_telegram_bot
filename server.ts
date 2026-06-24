@@ -65,22 +65,26 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
     // Command /start
     bot.start(async (ctx) => {
       const appUrl = process.env.APP_URL || "https://localhost:3000";
-      const userName = ctx.from?.first_name || "странник";
-      const usernameTg = ctx.from?.username ? `(@${ctx.from.username})` : "";
+      const rawUserName = ctx.from?.first_name || "странник";
+      const rawUsernameTg = ctx.from?.username ? `(@${ctx.from.username})` : "";
       
-      // Отправка уведомления администратору
+      // Отправка уведомления администратору в plain-text
       const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
       if (adminChannelId) {
         try {
           await bot!.telegram.sendMessage(
             adminChannelId, 
-            `В бот зашел новый пользователь: ${userName} ${usernameTg}`.trim()
+            `В бот зашел новый пользователь: ${rawUserName} ${rawUsernameTg}`.trim()
           );
           console.log(`[INFO] Уведомление о новом пользователе отправлено в канал: ${adminChannelId}`);
         } catch (err) {
           console.error(`[ERROR] Не удалось отправить уведомление в админ-канал ${adminChannelId}. Проверьте права бота:`, err);
         }
       }
+
+      // Экранируем спецсимволы для MarkdownV2 (https://core.telegram.org/bots/api#markdownv2-style)
+      const escapeMd = (str: string) => str.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
+      const userName = escapeMd(rawUserName);
 
       return ctx.replyWithMarkdownV2(
         `Приветствую, ${userName}\\! ✨ Я бот\\-проводник в мир душевного исцеления и регрессивных практик\\.\n\nЗапишитесь на глубокий сеанс регрессии, гипнотерапии, энергетической чистки или встречи с Вашим Я через наше удобное интерактивное мини\\-приложение ниже\\! 👇`,
@@ -107,36 +111,17 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
       );
     });
 
-    // Setup bot launch model
-    if (process.env.APP_URL) {
-      let appUrl = process.env.APP_URL;
-      if (appUrl.endsWith('/')) {
-        appUrl = appUrl.slice(0, -1);
-      }
-      
-      const isAIStudio = appUrl.includes("run.app");
-      const secretPath = `/api/telegram-webhook-${telegramToken.substring(0, 10)}`;
-      
-      if (!isAIStudio) {
-        console.log(`[INFO] Настройка Webhook Telegram Бота: ${appUrl}${secretPath}`);
-        app.use(bot.webhookCallback(secretPath));
-        bot.telegram.setWebhook(`${appUrl}${secretPath}`)
-          .then(() => console.log("[INFO] Webhook успешно установлен!"))
-          .catch(err => console.error("[ERROR] Не удалось установить Webhook:", err));
-      } else {
-        console.log(`[INFO] Запуск в AI Studio. Вебхук и Long Polling отключены, чтобы не перехватывать запросы рабочего сервера.`);
-      }
-    } else {
-      console.log("[INFO] APP_URL не задан. Запуск Telegram Бота в режиме Long Polling (локальная разработка)...");
-      // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict
-      bot.telegram.deleteWebhook({ drop_pending_updates: true })
-        .then(() => {
-          console.log("[INFO] Вебхук успешно удален перед запуском Long Polling.");
-          return bot!.launch();
-        })
-        .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
-        .catch(err => console.error("[ERROR] Ошибка запуска бота:", err));
-    }
+    // Используем Long Polling всегда, чтобы избежать проблем с Nginx, 
+    // который сейчас перехватывает запросы к /api/ и возвращает index.html.
+    console.log("[INFO] Запуск Telegram Бота в режиме Long Polling...");
+    // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict
+    bot.telegram.deleteWebhook({ drop_pending_updates: true })
+      .then(() => {
+        console.log("[INFO] Вебхук успешно удален перед запуском Long Polling.");
+        return bot!.launch();
+      })
+      .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
+      .catch(err => console.error("[ERROR] Ошибка запуска бота:", err));
   } catch (err) {
     console.error("[ERROR] Ошибка при инициализации Telegraf:", err);
   }

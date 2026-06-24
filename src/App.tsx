@@ -129,6 +129,15 @@ export default function App() {
         theme: tgTheme,
       });
 
+      // Сохраняем пользователя в базу данных при открытии Mini App
+      if (tg.initDataUnsafe?.user) {
+        fetch("/api/save_user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user: tg.initDataUnsafe.user })
+        }).catch(err => console.error("Ошибка при сохранении пользователя:", err));
+      }
+
       // Handle Telegram Theme changes on-the-fly
       const handleThemeChange = () => {
         const currentTheme = tg.colorScheme || "light";

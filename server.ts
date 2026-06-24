@@ -180,7 +180,71 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
   );
 }
 
+// Тестовый роут для проверки базы данных
+app.get("/api/test-db", async (req, res) => {
+  const envStatus = {
+    DB_HOST: !!process.env.DB_HOST,
+    DB_USER: !!process.env.DB_USER,
+    DB_PASSWORD: !!process.env.DB_PASSWORD,
+    DB_NAME: !!process.env.DB_NAME,
+  };
+
+  if (!pool) {
+    return res.status(500).json({ 
+      status: "error", 
+      message: "Пул соединений с БД не инициализирован. Проверьте переменные окружения.", 
+      env: envStatus 
+    });
+  }
+
+  try {
+    const [rows] = await pool.query("SELECT 1 as val");
+    res.json({ 
+      status: "success", 
+      message: "Успешное подключение к базе данных!", 
+      env: envStatus, 
+      testQuery: rows 
+    });
+  } catch (err: any) {
+    res.status(500).json({ 
+      status: "error", 
+      message: "Ошибка подключения к базе данных: " + err.message, 
+      env: envStatus 
+    });
+  }
+});
+
 // API Routes
+app.post("/api/save_user", async (req, res) => {
+  try {
+    const { user } = req.body;
+    if (!user || !user.id) {
+      return res.status(400).json({ error: "No user data provided" });
+    }
+
+    if (pool) {
+      const { id, first_name, last_name, username, language_code } = user;
+      await pool.query(`
+        INSERT INTO users (id, first_name, last_name, username, language_code)
+        VALUES (?, ?, ?, ?, ?)
+        ON DUPLICATE KEY UPDATE
+          first_name = VALUES(first_name),
+          last_name = VALUES(last_name),
+          username = VALUES(username),
+          language_code = VALUES(language_code),
+          updated_at = CURRENT_TIMESTAMP
+      `, [id, first_name || null, last_name || null, username || null, language_code || null]);
+      console.log(`[INFO] Посетитель ${id} (WebApp) успешно сохранен в БД.`);
+      res.json({ success: true });
+    } else {
+      res.status(500).json({ error: "Database not configured" });
+    }
+  } catch (err: any) {
+    console.error(`[ERROR] Ошибка сохранения пользователя WebApp:`, err.message);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 app.post("/api/book", async (req, res) => {
   try {
     const { sessionId, title, price, user } = req.body;

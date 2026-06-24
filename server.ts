@@ -9,6 +9,7 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { Telegraf, Markup } from "telegraf";
 import dotenv from "dotenv";
+import mysql from "mysql2/promise";
 
 // Поиск .env файла вверх по дереву каталогов, а также по специфичному пути хостинга
 function findEnvFile(startDir: string, maxLevels = 10): string | null {
@@ -57,6 +58,39 @@ app.use(express.json());
 const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
 let bot: Telegraf | null = null;
 
+// Настройка подключения к базе данных MySQL
+let pool: mysql.Pool | null = null;
+if (process.env.DB_HOST && process.env.DB_USER && process.env.DB_NAME) {
+  pool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  });
+
+  // Создаем таблицу пользователей, если она не существует
+  pool.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id BIGINT PRIMARY KEY,
+      first_name VARCHAR(255),
+      last_name VARCHAR(255),
+      username VARCHAR(255),
+      language_code VARCHAR(10),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
+  `).then(() => {
+    console.log("[INFO] Таблица users успешно проверена/создана в базе данных.");
+  }).catch((err) => {
+    console.error("[ERROR] Ошибка при создании таблицы users:", err);
+  });
+} else {
+  console.log("[WARN] Параметры базы данных (DB_HOST, DB_USER, DB_NAME) не заданы. Сохранение пользователей отключено.");
+}
+
 if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.trim() !== "") {
   console.log("[INFO] Инициализация Telegram Бота...");
   try {
@@ -85,6 +119,25 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
       // Экранируем спецсимволы для MarkdownV2 (https://core.telegram.org/bots/api#markdownv2-style)
       const escapeMd = (str: string) => str.replace(/[_*[\]()~`>#+\-=|{}.!]/g, '\\$&');
       const userName = escapeMd(rawUserName);
+
+      // Сохранение пользователя в базу данных
+      if (pool && ctx.from) {
+        try {
+          const { id, first_name, last_name, username, language_code } = ctx.from;
+          await pool.query(`
+            INSERT INTO users (id, first_name, last_name, username, language_code)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+              first_name = VALUES(first_name),
+              last_name = VALUES(last_name),
+              username = VALUES(username),
+              language_code = VALUES(language_code)
+          `, [id, first_name || null, last_name || null, username || null, language_code || null]);
+          console.log(`[INFO] Пользователь ${id} успешно сохранен/обновлен в базе данных.`);
+        } catch (err) {
+          console.error(`[ERROR] Не удалось сохранить пользователя ${ctx.from.id} в базу данных:`, err);
+        }
+      }
 
       return ctx.replyWithMarkdownV2(
         `Приветствую, ${userName}\\! ✨ Я бот\\-проводник в мир трансовых и регрессивных практик\\.\n\nНажмите «ПРАЙС», чтобы изучить все варианты сеансов: регрессивный гипноз, гипнотерапия, энергочистка и погружение для встречи с Высшим «Я» через удобное интерактивное мини\\-приложение\\! 👇`

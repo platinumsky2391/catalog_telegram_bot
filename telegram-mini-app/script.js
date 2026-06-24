@@ -654,7 +654,7 @@ function showDetail(session) {
   lastScrollPos = window.scrollY;
   
   // Прокрутка наверх
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo(0, 0);
 
   // Настройка текстовых блоков
   const detailPrice = document.getElementById("detail-price");
@@ -1002,7 +1002,7 @@ function hideDetail() {
   const catalogBottomSpacer = document.getElementById("catalog-bottom-spacer");
   if (catalogBottomSpacer) catalogBottomSpacer.classList.remove("hidden");
   
-  window.scrollTo({ top: lastScrollPos, behavior: "instant" });
+  window.scrollTo(0, lastScrollPos);
 
   if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
     tg.HapticFeedback.impactOccurred("light");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { sessions, Session } from "./data";
 import { workSteps } from "./workSteps";
 import {
@@ -70,6 +70,14 @@ export default function App() {
   const [bookingStatus, setBookingStatus] = useState<string | null>(null);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const scrollPosRef = useRef<number>(0);
+
+  useLayoutEffect(() => {
+    if (selectedSession) {
+      window.scrollTo(0, 0);
+    } else {
+      window.scrollTo(0, scrollPosRef.current);
+    }
+  }, [selectedSession]);
 
   const triggerHaptic = (
     style: "light" | "medium" | "heavy" | "rigid" | "soft" = "light",
@@ -518,23 +526,13 @@ export default function App() {
           )}
 
           {/* DETAILS PAGE OR CATALOG GRID */}
-          <AnimatePresence 
-            mode="wait"
-            onExitComplete={() => {
-              if (selectedSession) {
-                window.scrollTo({ top: 0, behavior: "instant" });
-              } else {
-                window.scrollTo({ top: scrollPosRef.current, behavior: "instant" });
-              }
-            }}
-          >
+          <div className="relative">
             {!selectedSession ? (
               /* CATALOG LIST VIEW */
               <motion.div
                 key="list-view"
-                initial={{ opacity: 0, y: 15 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-4"
                 id="catalog-grid"
@@ -835,7 +833,6 @@ export default function App() {
                 key="detail-view"
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
                 className="space-y-5"
                 id="detail-container"
@@ -1169,7 +1166,7 @@ export default function App() {
                 )}
               </motion.div>
             )}
-          </AnimatePresence>
+          </div>
         </div>
       </motion.div>
 

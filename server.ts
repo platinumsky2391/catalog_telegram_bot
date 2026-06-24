@@ -5,11 +5,34 @@
 
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { Telegraf, Markup } from "telegraf";
 import dotenv from "dotenv";
 
-dotenv.config();
+// Поиск .env файла вверх по дереву каталогов
+function findEnvFile(startDir: string, maxLevels = 10): string | null {
+  let currentDir = startDir;
+  for (let i = 0; i < maxLevels; i++) {
+    const envPath = path.join(currentDir, ".env");
+    if (fs.existsSync(envPath)) {
+      return envPath;
+    }
+    const parentDir = path.dirname(currentDir);
+    if (parentDir === currentDir) break; // Достигли корневого каталога (/)
+    currentDir = parentDir;
+  }
+  return null;
+}
+
+const envPath = findEnvFile(process.cwd());
+if (envPath) {
+  console.log(`[INFO] .env файл найден по пути: ${envPath}`);
+  dotenv.config({ path: envPath });
+} else {
+  console.log("[INFO] .env файл не найден в родительских каталогах, используется стандартная загрузка.");
+  dotenv.config();
+}
 
 const app = express();
 const PORT = 3000;
@@ -26,9 +49,24 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
     bot = new Telegraf(telegramToken);
 
     // Command /start
-    bot.start((ctx) => {
+    bot.start(async (ctx) => {
       const appUrl = process.env.APP_URL || "https://localhost:3000";
       const userName = ctx.from?.first_name || "странник";
+      const usernameTg = ctx.from?.username ? `(@${ctx.from.username})` : "";
+      
+      // Отправка уведомления администратору
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID;
+      if (adminChannelId) {
+        try {
+          await bot!.telegram.sendMessage(
+            adminChannelId, 
+            `В бот зашел новый пользователь: ${userName} ${usernameTg}`.trim()
+          );
+        } catch (err) {
+          console.error("[ERROR] Не удалось отправить уведомление в админ-канал. Проверьте ADMIN_CHANNEL_ID и права бота:", err);
+        }
+      }
+
       return ctx.replyWithMarkdownV2(
         `Приветствую, ${userName}\\! ✨ Я бот\\-проводник в мир душевного исцеления и регрессивных практик\\.\n\nЗапишитесь на глубокий сеанс регрессии, гипнотерапии, энергетической чистки или встречи с Вашим Я через наше удобное интерактивное мини\\-приложение ниже\\! 👇`,
         Markup.inlineKeyboard([

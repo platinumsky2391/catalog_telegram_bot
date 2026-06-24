@@ -344,9 +344,6 @@ window.addEventListener("DOMContentLoaded", () => {
       const catalogBtnBlock = document.getElementById("catalog-action-bar");
       if (inlineBtnBlock) inlineBtnBlock.style.display = "none";
       if (catalogBtnBlock) catalogBtnBlock.style.display = "none";
-      
-      const headerBtn = document.getElementById("back-btn-fallback");
-      if (headerBtn) headerBtn.style.display = "none";
     }
 
     Logger.info("TMA_INITIALIZED", {
@@ -989,10 +986,6 @@ function hideDetail() {
 
   document.getElementById("detail-page").classList.add("hidden");
   
-  setTimeout(() => {
-    window.scrollTo({ top: lastScrollPos, behavior: "instant" });
-  }, 0);
-  
   const bookingActionBar = document.getElementById("booking-action-bar");
   if (bookingActionBar) bookingActionBar.classList.add("hidden");
   
@@ -1008,6 +1001,8 @@ function hideDetail() {
   if (catalogActionBar) catalogActionBar.classList.remove("hidden");
   const catalogBottomSpacer = document.getElementById("catalog-bottom-spacer");
   if (catalogBottomSpacer) catalogBottomSpacer.classList.remove("hidden");
+  
+  window.scrollTo({ top: lastScrollPos, behavior: "instant" });
 
   if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
     tg.HapticFeedback.impactOccurred("light");

@@ -239,7 +239,6 @@ export default function App() {
 
     scrollPosRef.current = window.scrollY;
     setSelectedSession(session);
-    window.scrollTo({ top: 0, behavior: "instant" });
 
     // Native Telegram Haptic impact
     if (
@@ -264,10 +263,6 @@ export default function App() {
 
     setSelectedSession(null);
     setBookingStatus(null);
-    
-    setTimeout(() => {
-      window.scrollTo({ top: scrollPosRef.current, behavior: "instant" });
-    }, 0);
 
     // Native Telegram Haptic impact
     if (
@@ -523,7 +518,16 @@ export default function App() {
           )}
 
           {/* DETAILS PAGE OR CATALOG GRID */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence 
+            mode="wait"
+            onExitComplete={() => {
+              if (selectedSession) {
+                window.scrollTo({ top: 0, behavior: "instant" });
+              } else {
+                window.scrollTo({ top: scrollPosRef.current, behavior: "instant" });
+              }
+            }}
+          >
             {!selectedSession ? (
               /* CATALOG LIST VIEW */
               <motion.div
@@ -837,16 +841,14 @@ export default function App() {
                 id="detail-container"
               >
                 {/* Back navigation */}
-                {!isMobileTelegram && (
-                  <button
-                    onClick={handleBack}
-                    style={{ color: "var(--tg-theme-link-color, #3390ec)" }}
-                    className="flex items-center gap-1.5 hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Вернуться</span>
-                  </button>
-                )}
+                <button
+                  onClick={handleBack}
+                  style={{ color: "var(--tg-theme-link-color, #3390ec)" }}
+                  className="flex items-center gap-1.5 hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Вернуться</span>
+                </button>
 
                 {/* Cover visual Banner with rich SVG artwork */}
                 <div className="relative h-56 rounded-3xl overflow-hidden border border-neutral-200/40 dark:border-neutral-800/40 shadow-md">

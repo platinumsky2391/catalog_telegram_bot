@@ -10,8 +10,14 @@ import { createServer as createViteServer } from "vite";
 import { Telegraf, Markup } from "telegraf";
 import dotenv from "dotenv";
 
-// Поиск .env файла вверх по дереву каталогов
+// Поиск .env файла вверх по дереву каталогов, а также по специфичному пути хостинга
 function findEnvFile(startDir: string, maxLevels = 10): string | null {
+  // Сначала проверяем специфичный путь, указанный для хостинга
+  const specificPath = path.resolve(startDir, "../bot-solien/.env");
+  if (fs.existsSync(specificPath)) {
+    return specificPath;
+  }
+
   let currentDir = startDir;
   for (let i = 0; i < maxLevels; i++) {
     const envPath = path.join(currentDir, ".env");

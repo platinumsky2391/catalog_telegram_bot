@@ -147,6 +147,8 @@ body {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   padding: 6px 14px;
   border-radius: 9999px;
   font-size: 12px;
@@ -170,6 +172,8 @@ body {
   background-color: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
   padding: 4px 12px;
   border-radius: 12px;
   color: #ffffff;

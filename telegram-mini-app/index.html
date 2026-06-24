@@ -1,269 +1,1163 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="robots" content="index, follow" />
-  <title>Сеансы и Цены — Каталог сеансов регрессии и гипноза</title>
-  <meta name="description" content="Официальный каталог терапевтических и энергетических сеансов: гипноз, регрессия, сонастройка с Высшим Я и энергочистка биополя." />
-  
-  <!-- Подключение Telegram Web App API Script -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="robots" content="index, follow" />
+    <title>Сеансы и Цены — Каталог сеансов регрессии и гипноза</title>
+    <meta
+      name="description"
+      content="Официальный каталог терапевтических и энергетических сеансов: гипноз, регрессия, сонастройка с Высшим Я и энергочистка биополя."
+    />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Стили каталога -->
-  <link rel="stylesheet" href="style.css">
+    <!-- Подключение Telegram Web App API Script -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-  <!-- Schema.org JSON-LD структурированные данные -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Store",
-    "name": "Сеансы и Цены",
-    "description": "Профессиональный каталог духовных и терапевтических сеансов.",
-    "url": "https://telegram-mini-app.yourserver.com",
-    "priceRange": "$$",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Онлайн",
-      "addressCountry": "RU"
-    }
-  }
-  </script>
-</head>
-<body>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Фоновые градиенты свечения -->
-  <div class="ambient-glow bg-glow-left" id="glow-left"></div>
-  <div class="ambient-glow bg-glow-right" id="glow-right"></div>
+    <!-- Стили каталога -->
+    <link rel="stylesheet" href="style.css" />
 
-  <!-- Главный контейнер -->
-  <main class="app-container" id="app-container">
-    
-    <!-- ЗАГОЛОВОК МАГАЗИНА (Каталог) -->
-    <header className="shop-header" id="shop-header" style="background-color: var(--tg-theme-bg-color, #ffffff); padding: 32px; border-radius: 32px; border: 1px solid rgba(128,128,128,0.15); display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 24px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); position: relative; overflow: hidden;">
-      <!-- Subtle premium background glow -->
-      <div style="position: absolute; top: -96px; right: -96px; width: 192px; height: 192px; background-color: var(--tg-theme-link-color, #3b82f6); opacity: 0.2; border-radius: 50%; filter: blur(64px); pointer-events: none;"></div>
-      <div style="position: absolute; bottom: -96px; left: -96px; width: 192px; height: 192px; background-color: var(--tg-theme-link-color, #3b82f6); opacity: 0.2; border-radius: 50%; filter: blur(64px); pointer-events: none;"></div>
+    <!-- Schema.org JSON-LD структурированные данные -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "Сеансы и Цены",
+        "description": "Профессиональный каталог духовных и терапевтических сеансов.",
+        "url": "https://telegram-mini-app.yourserver.com",
+        "priceRange": "$$",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Онлайн",
+          "addressCountry": "RU"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Фоновые градиенты свечения -->
+    <div class="ambient-glow bg-glow-left" id="glow-left"></div>
+    <div class="ambient-glow bg-glow-right" id="glow-right"></div>
 
-      <div style="position: relative; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 9999px; padding: 1px; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em; font-size: 10px; margin-bottom: 16px; z-index: 10;">
-        <span style="display: inline-flex; height: 100%; width: 100%; align-items: center; justify-content: center; border-radius: 9999px; background-color: var(--tg-theme-bg-color, #ffffff); padding: 6px 16px; color: var(--tg-theme-text-color, #1e293b); gap: 6px;">
-          🌀 АНДРЕЙ ТРЕТЬЯКОВ
-        </span>
-      </div>
-      <h1 class="main-title" style="font-size: 32px; line-height: 1.1; font-weight: 800; letter-spacing: -0.025em; color: var(--tg-theme-text-color, #1e293b); margin-bottom: 12px; position: relative; z-index: 10;">Сеансы и цены</h1>
-      <p class="main-description" style="color: var(--tg-theme-hint-color, #64748b); font-size: 15px; max-width: 280px; margin: 0 auto; line-height: 1.625; text-wrap: balance; position: relative; z-index: 10;">Здесь вы можете ознакомиться с актуальной стоимостью сеансов и более подробно узнать о форматах работы.</p>
-      
-      <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; margin-top: 32px; position: relative; z-index: 10;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 16px;">
-          <a href="https://t.me/amemanoir" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 56px; height: 56px; border-radius: 22px; background-color: var(--tg-theme-secondary-bg-color, #f1f5f9); display: flex; align-items: center; justify-content: center; color: var(--tg-theme-text-color, #1e293b); text-decoration: none; border: 1px solid rgba(128, 128, 128, 0.1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)';">
-            <svg viewBox="0 0 496 512" fill="currentColor" width="28" height="28"><path d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"/></svg>
-          </a>
-          <a href="https://vk.com/amemanoir" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 56px; height: 56px; border-radius: 22px; background-color: var(--tg-theme-secondary-bg-color, #f1f5f9); display: flex; align-items: center; justify-content: center; color: var(--tg-theme-text-color, #1e293b); text-decoration: none; border: 1px solid rgba(128, 128, 128, 0.1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)';">
-            <svg viewBox="0 0 576 512" fill="currentColor" width="28" height="28"><path d="M545 117.7c3.7-12.5 0-21.7-17.8-21.7h-58.9c-15 0-21.9 7.9-25.6 16.7 0 0-30 73.1-72.4 120.5-13.7 13.7-20 18.1-27.5 18.1-3.7 0-9.4-4.4-9.4-16.9V117.7c0-15-4.2-21.7-16.6-21.7h-92.6c-9.4 0-15 7-15 13.5 0 14.2 21.2 17.5 23.4 57.5v86.8c0 19-3.4 22.5-10.9 22.5-20 0-68.6-73.4-97.4-157.4-5.8-16.3-11.5-22.9-26.6-22.9H38.8c-16.8 0-20.2 7.9-20.2 16.7 0 15.6 20 93.1 93.1 195.5C160.4 378.1 229 416 291.4 416c37.5 0 42.1-8.4 42.1-22.9 0-66.8-3.4-73.1 15.4-73.1 8.7 0 23.7 4.4 58.7 38.1 40 40 46.6 57.9 69 57.9h58.9c16.8 0 25.3-8.4 20.4-25-11.2-34.9-86.9-106.7-90.3-111.5-8.7-11.2-6.2-16.2 0-26.2.1-.1 72-101.3 79.4-135.6z"/></svg>
-          </a>
-          <a href="https://youtube.com/@amemanoir" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 56px; height: 56px; border-radius: 22px; background-color: var(--tg-theme-secondary-bg-color, #f1f5f9); display: flex; align-items: center; justify-content: center; color: var(--tg-theme-text-color, #1e293b); text-decoration: none; border: 1px solid rgba(128, 128, 128, 0.1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)';">
-            <svg viewBox="0 0 576 512" fill="currentColor" width="28" height="28"><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
-          </a>
-          <a href="https://dzen.ru/amemanoir" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 56px; height: 56px; border-radius: 22px; background-color: var(--tg-theme-secondary-bg-color, #f1f5f9); display: flex; align-items: center; justify-content: center; color: var(--tg-theme-text-color, #1e293b); text-decoration: none; border: 1px solid rgba(128, 128, 128, 0.1); box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 1px 2px 0 rgba(0, 0, 0, 0.05)';">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C12 5.523 12 12 0 12C12 12 18.477 12 24C12 18.477 12 12 24 12C12 12 12 5.523 12 0Z" /></svg>
-          </a>
+    <!-- Главный контейнер -->
+    <main class="app-container" id="app-container">
+      <!-- ЗАГОЛОВОК МАГАЗИНА (Каталог) -->
+      <header
+        className="shop-header"
+        id="shop-header"
+        style="
+          background-color: var(--tg-theme-bg-color, #ffffff);
+          padding: 32px;
+          border-radius: 32px;
+          border: 1px solid rgba(128, 128, 128, 0.15);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          margin-bottom: 24px;
+          box-shadow:
+            0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04);
+          position: relative;
+          overflow: hidden;
+        "
+      >
+        <!-- Subtle premium background glow -->
+        <div
+          style="
+            position: absolute;
+            top: -96px;
+            right: -96px;
+            width: 192px;
+            height: 192px;
+            background-color: var(--tg-theme-link-color, #3b82f6);
+            opacity: 0.2;
+            border-radius: 50%;
+            filter: blur(64px);
+            pointer-events: none;
+          "
+        ></div>
+        <div
+          style="
+            position: absolute;
+            bottom: -96px;
+            left: -96px;
+            width: 192px;
+            height: 192px;
+            background-color: var(--tg-theme-link-color, #3b82f6);
+            opacity: 0.2;
+            border-radius: 50%;
+            filter: blur(64px);
+            pointer-events: none;
+          "
+        ></div>
+
+        <div
+          style="
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 9999px;
+            padding: 1px;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            font-size: 10px;
+            margin-bottom: 16px;
+            z-index: 10;
+          "
+        >
+          <span
+            style="
+              display: inline-flex;
+              height: 100%;
+              width: 100%;
+              align-items: center;
+              justify-content: center;
+              border-radius: 9999px;
+              background-color: var(--tg-theme-bg-color, #ffffff);
+              padding: 6px 16px;
+              color: var(--tg-theme-text-color, #1e293b);
+              gap: 6px;
+            "
+          >
+            🌀 АНДРЕЙ ТРЕТЬЯКОВ
+          </span>
         </div>
-
-        <div style="display: flex; gap: 12px; flex-direction: column;">
-          <a href="https://solien.ru/" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 100%; padding: 16px 24px; border-radius: 20px; font-weight: bold; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; background-color: transparent; border: 1px solid var(--tg-theme-link-color, #3b82f6); color: var(--tg-theme-link-color, #3b82f6); text-decoration: none; transition: all 0.2s;" onmouseover="this.style.backgroundColor='var(--tg-theme-link-color, #3b82f6)'; this.style.color='#fff';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--tg-theme-link-color, #3b82f6)';">
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-            Сайт
-          </a>
-          <a href="https://t.me/otzyvgyp" target="_blank" rel="noreferrer" onclick="window.triggerHaptic('light')" style="width: 100%; padding: 16px 24px; border-radius: 20px; font-weight: bold; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--tg-theme-button-color, #10b981); color: var(--tg-theme-button-text-color, #ffffff); text-decoration: none; box-shadow: 0 8px 16px -6px var(--tg-theme-button-color, #10b981); transition: all 0.2s;">
-            <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="20" height="20"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            Отзывы
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <!-- СЕТКА КАТАЛОГА (Отображается по умолчанию) -->
-    <section class="catalog-grid" id="catalog-grid"></section>
-
-    <!-- БЛОК КАК ПРОХОДИТ РАБОТА -->
-    <section id="work-steps-section" class="info-card" style="margin-top: 32px; margin-bottom: 24px;">
-      <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 16px; color: var(--tg-theme-text-color, #ffffff);">Как проходит работа</h3>
-      <div id="work-steps-grid" style="display: flex; flex-direction: column; gap: 12px;"></div>
-    </section>
-
-    <!-- БЛОК ПРОТИВОПОКАЗАНИЯ -->
-    <section id="contraindications-section" style="margin-top: 32px; margin-bottom: 24px; border-top: 1px solid rgba(128, 128, 128, 0.1); padding-top: 32px;">
-      <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px;">
-        <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 16px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-          <span style="font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">ВАЖНАЯ ИНФОРМАЦИЯ</span>
-        </div>
-        <h2 style="font-size: 28px; font-weight: 900; letter-spacing: -0.02em; color: var(--tg-theme-text-color, #ffffff); text-transform: uppercase; margin-bottom: 12px; margin-top: 0;">ПРОТИВОПОКАЗАНИЯ</h2>
-        <p style="font-size: 14px; color: var(--tg-theme-hint-color, #aab2bd); max-width: 600px; line-height: 1.6; margin: 0;">
-          Методы работы с подсознанием являются мощным инструментом, который имеет строгие ограничения. Ознакомьтесь со списком противопоказаний перед записью.
+        <h1
+          class="main-title"
+          style="
+            font-size: 32px;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--tg-theme-text-color, #1e293b);
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
+          "
+        >
+          Сеансы и цены
+        </h1>
+        <p
+          class="main-description"
+          style="
+            color: var(--tg-theme-hint-color, #64748b);
+            font-size: 15px;
+            max-width: 280px;
+            margin: 0 auto;
+            line-height: 1.625;
+            text-wrap: balance;
+            position: relative;
+            z-index: 10;
+          "
+        >
+          Здесь вы можете ознакомиться с актуальной стоимостью сеансов и более
+          подробно узнать о форматах работы.
         </p>
-      </div>
 
-      <div style="background-color: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 24px; padding: 24px;">
-        <div style="display: flex; gap: 24px; flex-direction: column;">
-          <div style="display: flex; gap: 16px; align-items: center;">
-            <div style="width: 48px; height: 48px; border-radius: 16px; background-color: rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-            </div>
-            <h3 style="font-size: 18px; font-weight: bold; color: var(--tg-theme-text-color, #ffffff); margin: 0;">Строгие противопоказания к сеансам:</h3>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            margin-top: 32px;
+            position: relative;
+            z-index: 10;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 16px;
+              order: 2;
+              margin-top: 8px;
+            "
+          >
+            <a
+              href="https://t.me/amemanoir"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 22px;
+                background-color: var(--tg-theme-secondary-bg-color, #f1f5f9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--tg-theme-text-color, #1e293b);
+                text-decoration: none;
+                border: 1px solid rgba(128, 128, 128, 0.1);
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition:
+                  transform 0.2s,
+                  box-shadow 0.2s;
+              "
+              onmouseover="
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow =
+                  '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+              "
+              onmouseout="
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+              "
+            >
+              <svg
+                viewBox="0 0 496 512"
+                fill="currentColor"
+                width="28"
+                height="28"
+              >
+                <path
+                  d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm121.8 169.9l-40.7 191.8c-3 13.6-11.1 16.9-22.4 10.5l-62-45.7-29.9 28.8c-3.3 3.3-6.1 6.1-12.5 6.1l4.4-63.1 114.9-103.8c5-4.4-1.1-6.9-7.7-2.5l-142 89.4-61.2-19.1c-13.3-4.2-13.6-13.3 2.8-19.7l239.1-92.2c11.1-4 20.8 2.7 17.2 19.5z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://vk.com/amemanoir"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 22px;
+                background-color: var(--tg-theme-secondary-bg-color, #f1f5f9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--tg-theme-text-color, #1e293b);
+                text-decoration: none;
+                border: 1px solid rgba(128, 128, 128, 0.1);
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition:
+                  transform 0.2s,
+                  box-shadow 0.2s;
+              "
+              onmouseover="
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow =
+                  '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+              "
+              onmouseout="
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+              "
+            >
+              <svg
+                viewBox="0 0 576 512"
+                fill="currentColor"
+                width="28"
+                height="28"
+              >
+                <path
+                  d="M545 117.7c3.7-12.5 0-21.7-17.8-21.7h-58.9c-15 0-21.9 7.9-25.6 16.7 0 0-30 73.1-72.4 120.5-13.7 13.7-20 18.1-27.5 18.1-3.7 0-9.4-4.4-9.4-16.9V117.7c0-15-4.2-21.7-16.6-21.7h-92.6c-9.4 0-15 7-15 13.5 0 14.2 21.2 17.5 23.4 57.5v86.8c0 19-3.4 22.5-10.9 22.5-20 0-68.6-73.4-97.4-157.4-5.8-16.3-11.5-22.9-26.6-22.9H38.8c-16.8 0-20.2 7.9-20.2 16.7 0 15.6 20 93.1 93.1 195.5C160.4 378.1 229 416 291.4 416c37.5 0 42.1-8.4 42.1-22.9 0-66.8-3.4-73.1 15.4-73.1 8.7 0 23.7 4.4 58.7 38.1 40 40 46.6 57.9 69 57.9h58.9c16.8 0 25.3-8.4 20.4-25-11.2-34.9-86.9-106.7-90.3-111.5-8.7-11.2-6.2-16.2 0-26.2.1-.1 72-101.3 79.4-135.6z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://youtube.com/@amemanoir"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 22px;
+                background-color: var(--tg-theme-secondary-bg-color, #f1f5f9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--tg-theme-text-color, #1e293b);
+                text-decoration: none;
+                border: 1px solid rgba(128, 128, 128, 0.1);
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition:
+                  transform 0.2s,
+                  box-shadow 0.2s;
+              "
+              onmouseover="
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow =
+                  '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+              "
+              onmouseout="
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+              "
+            >
+              <svg
+                viewBox="0 0 576 512"
+                fill="currentColor"
+                width="28"
+                height="28"
+              >
+                <path
+                  d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://dzen.ru/amemanoir"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 56px;
+                height: 56px;
+                border-radius: 22px;
+                background-color: var(--tg-theme-secondary-bg-color, #f1f5f9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--tg-theme-text-color, #1e293b);
+                text-decoration: none;
+                border: 1px solid rgba(128, 128, 128, 0.1);
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition:
+                  transform 0.2s,
+                  box-shadow 0.2s;
+              "
+              onmouseover="
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow =
+                  '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+              "
+              onmouseout="
+                this.style.transform = 'scale(1)';
+                this.style.boxShadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+              "
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                width="26"
+                height="26"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 0C12 5.523 12 12 0 12C12 12 18.477 12 24C12 18.477 12 12 24 12C12 12 12 5.523 12 0Z"
+                />
+              </svg>
+            </a>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; row-gap: 16px;">
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Психиатрические диагнозы (шизофрения, биполярное расстройство, клиническая депрессия в тяжелой стадии).</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Эпилепсия и судорожные синдромы.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Острые психотические состояния, бред, галлюцинации.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Органические поражения головного мозга, деменция.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Состояние алкогольного или наркотического опьянения, а также период острой абстиненции.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Тяжелые сердечно-сосудистые заболевания (недавно перенесенный инфаркт, инсульт).</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Беременность.</span>
-                </div>
-                <div style="display: flex; align-items: flex-start; gap: 10px; text-align: left;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                  <span style="font-size: 13px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.5; opacity: 0.9; text-align: left;">Острые инфекционные заболевания с высокой температурой.</span>
-                </div>
-              </div>
-              <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(239, 68, 68, 0.2);">
-                <p style="font-size: 12px; font-style: italic; color: var(--tg-theme-hint-color, #aab2bd); margin: 0;">
-                  * Утаивание данных состояний при записи на сеанс перекладывает всю ответственность за возможные последствия на клиента.
-                </p>
-              </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- БЛОК FAQ -->
-    <section id="faq-section" class="info-card" style="margin-top: 32px; margin-bottom: 24px;">
-      <div style="text-align: left; margin-bottom: 24px;">
-        <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 8px; color: var(--tg-theme-text-color, #ffffff);">Ответы на частые вопросы</h3>
-        <p style="font-size: 14px; color: var(--tg-theme-hint-color, #aab2bd); margin: 0;">
-          Каждая ситуация уникальна. Если вашего вопроса здесь нет, напишите мне для индивидуальной беседы.
-        </p>
-      </div>
-      <div id="faq-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
-    </section>
-
-    <div class="bottom-spacer" id="catalog-bottom-spacer" style="height: 96px;"></div>
-
-    <!-- СТРАНИЦА ДЕТАЛЬНОГО ОПИСАНИЯ (Скрыта по умолчанию) -->
-    <section class="detail-page hidden" id="detail-page">
-      <button class="back-btn-inline" id="back-btn-fallback" style="display: flex; align-items: center; gap: 6px; color: var(--tg-link-color); font-size: 14px; font-weight: 500; cursor: pointer; background: none; border: none; padding: 0; margin-bottom: 20px;">
-        <svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="16" height="16"><path d="m15 18-6-6 6-6"/></svg>
-        <span>Вернуться</span>
-      </button>
-
-      <!-- Обложка/Фото товара -->
-      <div class="detail-banner" id="detail-banner"></div>
-
-      <!-- Краткая информация / Цена -->
-      <div class="info-card">
-        <div class="info-row-container">
-          <div class="info-labels">
-            <span class="info-label">Стоимость</span>
-            <span class="info-label">Длительность</span>
+          <div style="display: flex; gap: 12px; flex-direction: row; order: 1;">
+            <a
+              href="https://solien.ru/"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 100%;
+                padding: 16px 24px;
+                border-radius: 20px;
+                font-weight: bold;
+                font-size: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                background-color: transparent;
+                border: 1px solid var(--tg-theme-link-color, #3b82f6);
+                color: var(--tg-theme-link-color, #3b82f6);
+                text-decoration: none;
+                transition: all 0.2s;
+              "
+              onmouseover="
+                this.style.backgroundColor =
+                  'var(--tg-theme-link-color, #3b82f6)';
+                this.style.color = '#fff';
+              "
+              onmouseout="
+                this.style.backgroundColor = 'transparent';
+                this.style.color = 'var(--tg-theme-link-color, #3b82f6)';
+              "
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+              >
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                <path d="M2 12h20" />
+              </svg>
+              Сайт
+            </a>
+            <a
+              href="https://t.me/otzyvgyp"
+              target="_blank"
+              rel="noreferrer"
+              onclick="window.triggerHaptic('light')"
+              style="
+                width: 100%;
+                padding: 16px 24px;
+                border-radius: 20px;
+                font-weight: bold;
+                font-size: 15px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                background-color: var(--tg-theme-button-color, #10b981);
+                color: var(--tg-theme-button-text-color, #ffffff);
+                text-decoration: none;
+                box-shadow: 0 8px 16px -6px
+                  var(--tg-theme-button-color, #10b981);
+                transition: all 0.2s;
+              "
+            >
+              <svg
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+              >
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
+                />
+              </svg>
+              Отзывы
+            </a>
           </div>
-          <div class="info-values">
-            <div class="detail-price-tag" id="detail-price">8 500 ₽</div>
-            <div class="detail-duration-tag" id="detail-duration">2 часа</div>
-          </div>
         </div>
-        <div class="info-description-block">
-          <span class="info-label">О сеансе</span>
-          <p class="detail-description" id="detail-description"></p>
-        </div>
-      </div>
+      </header>
 
-      <!-- Как проходит сеанс / Этапы -->
-      <div class="info-card step-card">
-        <h3 class="section-title-normal" id="steps-section-title">Как проходит сеанс?</h3>
-        <p class="section-text-normal" id="steps-section-text"></p>
-        
-        <h4 class="steps-sub-title" id="steps-list-title">Этапы погружения:</h4>
-        <div class="steps-timeline" id="steps-timeline"></div>
+      <!-- СЕТКА КАТАЛОГА (Отображается по умолчанию) -->
+      <section class="catalog-grid" id="catalog-grid"></section>
 
-        <div class="warning-box hidden" id="warning-box">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-          <span id="warning-text"></span>
-        </div>
-      </div>
-
-      <div id="extra-blocks-container"></div>
-
-      <!-- Результаты / Преимущества (Динамически набивается через js) -->
-      <div class="info-card" id="benefits-card">
-        <h3 class="card-title-with-icon" id="benefits-title">
-          <svg id="benefits-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-          <span id="benefits-title-text">Результаты сеанса:</span>
+      <!-- БЛОК КАК ПРОХОДИТ РАБОТА -->
+      <section
+        id="work-steps-section"
+        class="info-card"
+        style="margin-top: 32px; margin-bottom: 24px"
+      >
+        <h3
+          style="
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            color: var(--tg-theme-text-color, #ffffff);
+          "
+        >
+          Как проходит работа
         </h3>
-        <p id="benefits-desc" style="font-size: 12px; opacity: 0.8; margin-top: 6px; margin-bottom: 12px; line-height: 1.4; display: none; color: rgba(255, 255, 255, 0.6);"></p>
-        <div id="benefits-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
-      </div>
+        <div
+          id="work-steps-grid"
+          style="display: flex; flex-direction: column; gap: 12px"
+        ></div>
+      </section>
 
-      <!-- Показания для терапии -->
-      <div class="info-card hidden" id="indications-card" style="margin-top: 16px;">
-        <div style="margin-bottom: 12px;">
-          <h3 id="indications-title" style="font-size: 16px; font-weight: bold; color: var(--tg-theme-text-color, #ffffff);"></h3>
-          <p id="indications-desc" style="font-size: 12.5px; opacity: 0.8; margin-top: 6px; line-height: 1.45;"></p>
+      <!-- БЛОК ПРОТИВОПОКАЗАНИЯ -->
+      <section
+        id="contraindications-section"
+        style="
+          margin-top: 32px;
+          margin-bottom: 24px;
+          border-top: 1px solid rgba(128, 128, 128, 0.1);
+          padding-top: 32px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 32px;
+          "
+        >
+          <div
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              padding: 4px 12px;
+              border-radius: 9999px;
+              background-color: rgba(239, 68, 68, 0.1);
+              color: #ef4444;
+              border: 1px solid rgba(239, 68, 68, 0.2);
+              margin-bottom: 16px;
+            "
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"
+              />
+              <path d="M12 9v4" />
+              <path d="M12 17h.01" />
+            </svg>
+            <span
+              style="
+                font-size: 11px;
+                font-weight: bold;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+              "
+              >ВАЖНАЯ ИНФОРМАЦИЯ</span
+            >
+          </div>
+          <h2
+            style="
+              font-size: 28px;
+              font-weight: 900;
+              letter-spacing: -0.02em;
+              color: var(--tg-theme-text-color, #ffffff);
+              text-transform: uppercase;
+              margin-bottom: 12px;
+              margin-top: 0;
+            "
+          >
+            ПРОТИВОПОКАЗАНИЯ
+          </h2>
+          <p
+            style="
+              font-size: 14px;
+              color: var(--tg-theme-hint-color, #aab2bd);
+              max-width: 600px;
+              line-height: 1.6;
+              margin: 0;
+            "
+          >
+            Методы работы с подсознанием являются мощным инструментом, который
+            имеет строгие ограничения. Ознакомьтесь со списком противопоказаний
+            перед записью.
+          </p>
         </div>
-        <div id="indications-grid" style="display: grid; grid-template-columns: 1fr; gap: 10px;"></div>
-      </div>
 
-      <!-- Примеры самых распространённых запросов для прохождения сеанса -->
-      <div class="info-card hidden" id="example-requests-card">
-        <h3 class="requests-title" id="example-requests-card-title" style="font-size: 15px; font-weight: bold; margin-bottom: 15px; color: var(--tg-theme-text-color, #ffffff); line-height: 1.3;"></h3>
-        <ul class="benefits-list" id="example-requests-list" style="margin-top: 10px;"></ul>
-      </div>
+        <div
+          style="
+            background-color: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 24px;
+            padding: 24px;
+          "
+        >
+          <div style="display: flex; gap: 24px; flex-direction: column">
+            <div style="display: flex; gap: 16px; align-items: center">
+              <div
+                style="
+                  width: 48px;
+                  height: 48px;
+                  border-radius: 16px;
+                  background-color: rgba(239, 68, 68, 0.1);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  flex-shrink: 0;
+                "
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"
+                  />
+                  <path d="M12 9v4" />
+                  <path d="M12 17h.01" />
+                </svg>
+              </div>
+              <h3
+                style="
+                  font-size: 18px;
+                  font-weight: bold;
+                  color: var(--tg-theme-text-color, #ffffff);
+                  margin: 0;
+                "
+              >
+                Строгие противопоказания к сеансам:
+              </h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 16px">
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Психиатрические диагнозы (шизофрения, биполярное
+                  расстройство, клиническая депрессия в тяжелой стадии).</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Эпилепсия и судорожные синдромы.</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Острые психотические состояния, бред, галлюцинации.</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Органические поражения головного мозга, деменция.</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Состояние алкогольного или наркотического опьянения, а также
+                  период острой абстиненции.</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Тяжелые сердечно-сосудистые заболевания (недавно перенесенный
+                  инфаркт, инсульт).</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Беременность.</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: flex-start;
+                  gap: 10px;
+                  text-align: left;
+                "
+              >
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#ef4444"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  style="flex-shrink: 0; margin-top: 2px"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m15 9-6 6" />
+                  <path d="m9 9 6 6" />
+                </svg>
+                <span
+                  style="
+                    font-size: 13px;
+                    color: var(--tg-theme-text-color, #ffffff);
+                    line-height: 1.5;
+                    opacity: 0.9;
+                    text-align: left;
+                  "
+                  >Острые инфекционные заболевания с высокой температурой.</span
+                >
+              </div>
+            </div>
+            <div
+              style="
+                margin-top: 24px;
+                padding-top: 16px;
+                border-top: 1px solid rgba(239, 68, 68, 0.2);
+              "
+            >
+              <p
+                style="
+                  font-size: 12px;
+                  font-style: italic;
+                  color: var(--tg-theme-hint-color, #aab2bd);
+                  margin: 0;
+                "
+              >
+                * Утаивание данных состояний при записи на сеанс перекладывает
+                всю ответственность за возможные последствия на клиента.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <div class="bottom-spacer" style="height: 96px;"></div>
-    </section>
+      <!-- БЛОК FAQ -->
+      <section
+        id="faq-section"
+        class="info-card"
+        style="margin-top: 32px; margin-bottom: 24px"
+      >
+        <div style="text-align: left; margin-bottom: 24px">
+          <h3
+            style="
+              font-size: 20px;
+              font-weight: bold;
+              margin-bottom: 8px;
+              color: var(--tg-theme-text-color, #ffffff);
+            "
+          >
+            Ответы на частые вопросы
+          </h3>
+          <p
+            style="
+              font-size: 14px;
+              color: var(--tg-theme-hint-color, #aab2bd);
+              margin: 0;
+            "
+          >
+            Каждая ситуация уникальна. Если вашего вопроса здесь нет, напишите
+            мне для индивидуальной беседы.
+          </p>
+        </div>
+        <div
+          id="faq-list"
+          style="display: flex; flex-direction: column; gap: 12px"
+        ></div>
+      </section>
 
-  </main>
+      <div
+        class="bottom-spacer"
+        id="catalog-bottom-spacer"
+        style="height: 96px"
+      ></div>
 
-  <!-- Кнопка бронирования для каталога (Для браузера/ПК) -->
-  <div class="booking-action-bar" id="catalog-action-bar">
-    <button class="order-button" id="catalog-order-button" onclick="bookSession()">
-      Записаться на сеанс
-    </button>
-    <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
-  </div>
+      <!-- СТРАНИЦА ДЕТАЛЬНОГО ОПИСАНИЯ (Скрыта по умолчанию) -->
+      <section class="detail-page hidden" id="detail-page">
+        <button
+          class="back-btn-inline"
+          id="back-btn-fallback"
+          style="
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--tg-link-color);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+          "
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <span>Вернуться</span>
+        </button>
 
-  <!-- Кнопка бронирования внутри браузера/ПК (Для Telegram скрывается, так как используется нативная MainButton) -->
-  <div class="booking-action-bar hidden" id="booking-action-bar">
-    <button class="order-button" id="order-button">
-      Записаться на сеанс
-    </button>
-    <p class="order-notice">В мобильном Telegram сеанс бронируется через нативную нижнюю панель</p>
-  </div>
+        <!-- Обложка/Фото товара -->
+        <div class="detail-banner" id="detail-banner"></div>
 
-  <!-- Скрипт каталога -->
-  <script src="script.js"></script>
-</body>
+        <!-- Краткая информация / Цена -->
+        <div class="info-card">
+          <div class="info-row-container">
+            <div class="info-labels">
+              <span class="info-label">Стоимость</span>
+              <span class="info-label">Длительность</span>
+            </div>
+            <div class="info-values">
+              <div class="detail-price-tag" id="detail-price">8 500 ₽</div>
+              <div class="detail-duration-tag" id="detail-duration">2 часа</div>
+            </div>
+          </div>
+          <div class="info-description-block">
+            <span class="info-label">О сеансе</span>
+            <p class="detail-description" id="detail-description"></p>
+          </div>
+        </div>
+
+        <!-- Как проходит сеанс / Этапы -->
+        <div class="info-card step-card">
+          <h3 class="section-title-normal" id="steps-section-title">
+            Как проходит сеанс?
+          </h3>
+          <p class="section-text-normal" id="steps-section-text"></p>
+
+          <h4 class="steps-sub-title" id="steps-list-title">
+            Этапы погружения:
+          </h4>
+          <div class="steps-timeline" id="steps-timeline"></div>
+
+          <div class="warning-box hidden" id="warning-box">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <span id="warning-text"></span>
+          </div>
+        </div>
+
+        <div id="extra-blocks-container"></div>
+
+        <!-- Результаты / Преимущества (Динамически набивается через js) -->
+        <div class="info-card" id="benefits-card">
+          <h3 class="card-title-with-icon" id="benefits-title">
+            <svg
+              id="benefits-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#10b981"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <span id="benefits-title-text">Результаты сеанса:</span>
+          </h3>
+          <p
+            id="benefits-desc"
+            style="
+              font-size: 12px;
+              opacity: 0.8;
+              margin-top: 6px;
+              margin-bottom: 12px;
+              line-height: 1.4;
+              display: none;
+              color: rgba(255, 255, 255, 0.6);
+            "
+          ></p>
+          <div
+            id="benefits-list"
+            style="display: flex; flex-direction: column; gap: 12px"
+          ></div>
+        </div>
+
+        <!-- Показания для терапии -->
+        <div
+          class="info-card hidden"
+          id="indications-card"
+          style="margin-top: 16px"
+        >
+          <div style="margin-bottom: 12px">
+            <h3
+              id="indications-title"
+              style="
+                font-size: 16px;
+                font-weight: bold;
+                color: var(--tg-theme-text-color, #ffffff);
+              "
+            ></h3>
+            <p
+              id="indications-desc"
+              style="
+                font-size: 12.5px;
+                opacity: 0.8;
+                margin-top: 6px;
+                line-height: 1.45;
+              "
+            ></p>
+          </div>
+          <div
+            id="indications-grid"
+            style="display: grid; grid-template-columns: 1fr; gap: 10px"
+          ></div>
+        </div>
+
+        <!-- Примеры самых распространённых запросов для прохождения сеанса -->
+        <div class="info-card hidden" id="example-requests-card">
+          <h3
+            class="requests-title"
+            id="example-requests-card-title"
+            style="
+              font-size: 15px;
+              font-weight: bold;
+              margin-bottom: 15px;
+              color: var(--tg-theme-text-color, #ffffff);
+              line-height: 1.3;
+            "
+          ></h3>
+          <ul
+            class="benefits-list"
+            id="example-requests-list"
+            style="margin-top: 10px"
+          ></ul>
+        </div>
+
+        <div class="bottom-spacer" style="height: 96px"></div>
+      </section>
+    </main>
+
+    <!-- Кнопка бронирования для каталога (Для браузера/ПК) -->
+    <div class="booking-action-bar" id="catalog-action-bar">
+      <button
+        class="order-button"
+        id="catalog-order-button"
+        onclick="bookSession()"
+      >
+        Записаться на сеанс
+      </button>
+      <p class="order-notice">
+        В мобильном Telegram сеанс бронируется через нативную нижнюю панель
+      </p>
+    </div>
+
+    <!-- Кнопка бронирования внутри браузера/ПК (Для Telegram скрывается, так как используется нативная MainButton) -->
+    <div class="booking-action-bar hidden" id="booking-action-bar">
+      <button class="order-button" id="order-button">
+        Записаться на сеанс
+      </button>
+      <p class="order-notice">
+        В мобильном Telegram сеанс бронируется через нативную нижнюю панель
+      </p>
+    </div>
+
+    <!-- Скрипт каталога -->
+    <script src="script.js"></script>
+  </body>
 </html>

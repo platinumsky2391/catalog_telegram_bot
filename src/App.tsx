@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { sessions, Session } from "./data";
 import { workSteps } from "./workSteps";
 import {
@@ -69,6 +69,7 @@ export default function App() {
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
   const [bookingStatus, setBookingStatus] = useState<string | null>(null);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const scrollPosRef = useRef<number>(0);
 
   const triggerHaptic = (
     style: "light" | "medium" | "heavy" | "rigid" | "soft" = "light",
@@ -236,8 +237,9 @@ export default function App() {
       targetSessionTitle: session.title,
     });
 
+    scrollPosRef.current = window.scrollY;
     setSelectedSession(session);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "instant" });
 
     // Native Telegram Haptic impact
     if (
@@ -262,6 +264,10 @@ export default function App() {
 
     setSelectedSession(null);
     setBookingStatus(null);
+    
+    setTimeout(() => {
+      window.scrollTo({ top: scrollPosRef.current, behavior: "instant" });
+    }, 0);
 
     // Native Telegram Haptic impact
     if (
@@ -450,6 +456,30 @@ export default function App() {
               </p>
 
               <div className="flex flex-col gap-4 w-full relative z-10 mt-8">
+                <div className="flex flex-row gap-3 mt-2">
+                  <a
+                    href="https://solien.ru/"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={handleLinkClick}
+                    className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-bg-color)] border border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)] shadow-[0_4px_12px_-4px_var(--tg-theme-link-color)] hover:bg-[var(--tg-theme-link-color)] hover:text-white transition-all active:scale-[0.98]"
+                  >
+                    <Globe className="w-5 h-5" />
+                    Сайт
+                  </a>
+
+                  <a
+                    href="https://t.me/otzyvgyp"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={handleLinkClick}
+                    className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-link-color)] text-white shadow-[0_8px_16px_-6px_var(--tg-theme-link-color)] hover:shadow-[0_12px_20px_-8px_var(--tg-theme-link-color)] hover:opacity-95 transition-all active:scale-[0.98]"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Отзывы
+                  </a>
+                </div>
+
                 <div className="flex items-center justify-center gap-4">
                   <a
                     href="https://t.me/amemanoir"
@@ -486,30 +516,6 @@ export default function App() {
                     className="w-[56px] h-[56px] rounded-[22px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:scale-105 hover:shadow-md transition-all"
                   >
                     <DzenIcon className="w-[26px] h-[26px] text-[var(--tg-theme-text-color)]" />
-                  </a>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 mt-2">
-                  <a
-                    href="https://solien.ru/"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={handleLinkClick}
-                    className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-bg-color)] border border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)] shadow-[0_4px_12px_-4px_var(--tg-theme-link-color)] hover:bg-[var(--tg-theme-link-color)] hover:text-white transition-all active:scale-[0.98]"
-                  >
-                    <Globe className="w-5 h-5" />
-                    Сайт
-                  </a>
-
-                  <a
-                    href="https://t.me/otzyvgyp"
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={handleLinkClick}
-                    className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-link-color)] text-white shadow-[0_8px_16px_-6px_var(--tg-theme-link-color)] hover:shadow-[0_12px_20px_-8px_var(--tg-theme-link-color)] hover:opacity-95 transition-all active:scale-[0.98]"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    Отзывы
                   </a>
                 </div>
               </div>
@@ -680,7 +686,7 @@ export default function App() {
                           Строгие противопоказания к сеансам:
                         </h3>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                      <div className="flex flex-col gap-4">
                         {[
                           "Психиатрические диагнозы (шизофрения, биполярное расстройство, клиническая депрессия в тяжелой стадии).",
                           "Эпилепсия и судорожные синдромы.",
@@ -830,11 +836,12 @@ export default function App() {
                 className="space-y-5"
                 id="detail-container"
               >
-                {/* Back navigation (Hidden in Mobile Telegram as Native BackButton takes over) */}
+                {/* Back navigation */}
                 {!isMobileTelegram && (
                   <button
                     onClick={handleBack}
-                    className="flex items-center gap-1.5 text-[var(--tg-theme-link-color)] hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
+                    style={{ color: "var(--tg-theme-link-color, #3390ec)" }}
+                    className="flex items-center gap-1.5 hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     <span>Вернуться</span>
@@ -857,7 +864,7 @@ export default function App() {
                     </BadgeGlass>
 
                     <span className="text-[12px] font-bold text-amber-400 flex items-center gap-1.5 drop-shadow-md pr-1">
-                      <span className="w-[6px] h-[6px] -translate-y-[0.5px] rounded-full bg-emerald-400 animate-pulse shrink-0 shadow-[0_0_5px_rgba(52,211,153,0.8)]" />
+                      <span className="w-[6px] h-[6px] -translate-y-[0.5px] rounded-full bg-emerald-400 shrink-0 shadow-[0_0_5px_rgba(52,211,153,0.8)]" />
                       <span className="leading-none">Онлайн сеанс</span>
                     </span>
                   </div>
@@ -1111,7 +1118,7 @@ export default function App() {
                         </p>
                       )}
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-3">
                       {selectedSession.indications.items.map((item, idx) => (
                         <div
                           key={idx}

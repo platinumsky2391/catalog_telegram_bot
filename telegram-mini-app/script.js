@@ -321,6 +321,7 @@ const sessions = [
 ];
 
 let curSession = null;
+let lastScrollPos = 0;
 
 // Инициализация при монтировании страницы
 window.addEventListener("DOMContentLoaded", () => {
@@ -653,8 +654,10 @@ function showDetail(session) {
     document.body.classList.remove("premium-past-lives");
   }
   
+  lastScrollPos = window.scrollY;
+  
   // Прокрутка наверх
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  window.scrollTo({ top: 0, behavior: "instant" });
 
   // Настройка текстовых блоков
   const detailPrice = document.getElementById("detail-price");
@@ -985,6 +988,10 @@ function hideDetail() {
   curSession = null;
 
   document.getElementById("detail-page").classList.add("hidden");
+  
+  setTimeout(() => {
+    window.scrollTo({ top: lastScrollPos, behavior: "instant" });
+  }, 0);
   
   const bookingActionBar = document.getElementById("booking-action-bar");
   if (bookingActionBar) bookingActionBar.classList.add("hidden");

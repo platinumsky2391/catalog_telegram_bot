@@ -6,6 +6,12 @@
 // Определение объектов Telegram WebApp API
 const tg = window.Telegram?.WebApp;
 
+window.triggerHaptic = function(style = "light") {
+  if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
+    tg.HapticFeedback.impactOccurred(style);
+  }
+};
+
 // Аналитический логгер для сбора веб-метрик и конверсий (Amplitude / Telegram Analytics)
 const Logger = {
   sessionId: "tma_sess_" + Math.random().toString(36).substring(2, 15),
@@ -328,13 +334,17 @@ window.addEventListener("DOMContentLoaded", () => {
     tg.ready();
     tg.expand();
     
-    // Скрытие резервных кнопок, так как Telegram использует нативный MainButton
-    const headerBtn = document.getElementById("back-btn-fallback");
-    const inlineBtnBlock = document.getElementById("booking-action-bar");
-    const catalogBtnBlock = document.getElementById("catalog-action-bar");
-    if (inlineBtnBlock) inlineBtnBlock.style.display = "none";
-    if (catalogBtnBlock) catalogBtnBlock.style.display = "none";
-    if (headerBtn) headerBtn.style.display = "none";
+    // Скрытие резервных кнопок только на мобильных платформах, так как там Telegram использует нативный MainButton
+    const isMobileTelegram = ['android', 'android_x86', 'ios'].includes(tg.platform);
+    
+    if (isMobileTelegram) {
+      const headerBtn = document.getElementById("back-btn-fallback");
+      const inlineBtnBlock = document.getElementById("booking-action-bar");
+      const catalogBtnBlock = document.getElementById("catalog-action-bar");
+      if (inlineBtnBlock) inlineBtnBlock.style.display = "none";
+      if (catalogBtnBlock) catalogBtnBlock.style.display = "none";
+      if (headerBtn) headerBtn.style.display = "none";
+    }
 
     Logger.info("TMA_INITIALIZED", {
       user: tg.initDataUnsafe?.user,
@@ -523,7 +533,7 @@ function renderFaq() {
     }
   ];
 
-  let expandedIndex = 0;
+  let expandedIndex = null;
 
   const renderItems = () => {
     faqList.innerHTML = "";
@@ -582,6 +592,9 @@ function renderFaq() {
       btn.appendChild(iconDiv);
       
       btn.addEventListener("click", () => {
+        if (tg?.HapticFeedback && typeof tg.isVersionAtLeast === 'function' && tg.isVersionAtLeast('6.1')) {
+          tg.HapticFeedback.impactOccurred("light");
+        }
         expandedIndex = isExpanded ? null : index;
         renderItems();
       });
@@ -624,6 +637,9 @@ function showDetail(session) {
   if (catalogBottomSpacer) catalogBottomSpacer.classList.add("hidden");
   const detailPage = document.getElementById("detail-page");
   detailPage.classList.remove("hidden");
+  
+  const bookingActionBar = document.getElementById("booking-action-bar");
+  if (bookingActionBar) bookingActionBar.classList.remove("hidden");
   
   if (session.id === "past-lives") {
     detailPage.classList.add("premium-past-lives");
@@ -961,6 +977,10 @@ function hideDetail() {
   curSession = null;
 
   document.getElementById("detail-page").classList.add("hidden");
+  
+  const bookingActionBar = document.getElementById("booking-action-bar");
+  if (bookingActionBar) bookingActionBar.classList.add("hidden");
+  
   document.getElementById("shop-header").classList.remove("hidden");
   document.getElementById("catalog-grid").classList.remove("hidden");
   const workStepsSection = document.getElementById("work-steps-section");

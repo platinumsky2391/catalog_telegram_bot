@@ -563,7 +563,7 @@ body {
   transform: translateX(-50%);
   width: 100%;
   max-width: 500px;
-  padding: 40px 20px 24px;
+  padding: 32px 20px max(16px, env(safe-area-inset-bottom));
   background: linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent);
   z-index: 100;
   margin: 0;

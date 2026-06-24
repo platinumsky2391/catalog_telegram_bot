@@ -20,6 +20,7 @@ import {
   HelpCircle,
   CheckCircle,
   Zap,
+  Globe,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import AnalyticalLogger from "./logger";
@@ -31,6 +32,12 @@ import hypnotherapyImg from "../img/izbavlenie-ot-strahov.webp";
 import higherSelfImg from "../img/otvety-ot-vysshego-ya.webp";
 // @ts-expect-error
 import energyCleansingImg from "../img/snyatie-energeticheskih-blokov.webp";
+import {
+  TelegramIcon,
+  VkIcon,
+  YoutubeIcon,
+  DzenIcon,
+} from "./components/SocialIcons";
 
 // Get Telegram WebApp object
 const tg = (window as any).Telegram?.WebApp;
@@ -43,27 +50,46 @@ const BadgeGlass = ({
   className?: string;
 }) => {
   const baseClasses =
-    "bg-black/40 backdrop-blur-md rounded-full font-mono font-medium tracking-wide text-white uppercase flex items-center shrink-0 shadow-[0_4px_10px_rgba(0,0,0,0.1)] font-sans border border-white/10 px-3.5 py-1.5 text-xs gap-1.5";
+    "relative inline-flex items-center justify-center overflow-hidden rounded-full p-[1px] shadow-sm uppercase font-bold tracking-widest text-[10px]";
 
   return (
-    <span
-      className={`${baseClasses} ${className}`}
-      style={{
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-      }}
-    >
-      {children}
-    </span>
+    <div className={`${baseClasses} ${className}`}>
+      <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,rgba(128,128,128,0.05)_0%,rgba(128,128,128,0.4)_50%,rgba(128,128,128,0.05)_100%)] dark:bg-[conic-gradient(from_90deg_at_50%_50%,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.4)_50%,rgba(255,255,255,0.05)_100%)]" />
+      <span className="inline-flex h-full w-full cursor-default items-center justify-center rounded-full bg-[var(--tg-theme-bg-color)] px-4 py-1.5 backdrop-blur-3xl text-[var(--tg-theme-text-color)] gap-1.5">
+        {children}
+      </span>
+    </div>
   );
 };
 
 export default function App() {
   const [selectedSession, setSelectedSession] = useState<Session | null>(null);
   const [isTelegram, setIsTelegram] = useState(false);
+  const [isMobileTelegram, setIsMobileTelegram] = useState(false);
   const [themeMode, setThemeMode] = useState<"light" | "dark">("light");
   const [bookingStatus, setBookingStatus] = useState<string | null>(null);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+
+  const triggerHaptic = (
+    style: "light" | "medium" | "heavy" | "rigid" | "soft" = "light",
+  ) => {
+    if (
+      tg?.HapticFeedback &&
+      typeof tg.isVersionAtLeast === "function" &&
+      tg.isVersionAtLeast("6.1")
+    ) {
+      tg.HapticFeedback.impactOccurred(style);
+    }
+  };
+
+  const toggleFaq = (index: number) => {
+    triggerHaptic("light");
+    setExpandedFaq(expandedFaq === index ? null : index);
+  };
+
+  const handleLinkClick = () => {
+    triggerHaptic("light");
+  };
 
   // Initialize Telegram WebApp configuration
   useEffect(() => {
@@ -76,6 +102,9 @@ export default function App() {
 
     if (isActualTelegram) {
       setIsTelegram(true);
+      if (["android", "android_x86", "ios"].includes(tg.platform)) {
+        setIsMobileTelegram(true);
+      }
       tg.ready();
       tg.expand();
 
@@ -172,7 +201,23 @@ export default function App() {
       };
     } else {
       tg.BackButton.hide();
-      tg.MainButton.hide();
+
+      tg.MainButton.setText("Записаться на сеанс");
+      tg.MainButton.setParams({
+        color: tg.themeParams?.button_color || "#2481cc",
+        text_color: tg.themeParams?.button_text_color || "#ffffff",
+      });
+      tg.MainButton.show();
+
+      const onMainCatalogClick = () => {
+        handleBooking(null);
+      };
+      tg.MainButton.onClick(onMainCatalogClick);
+
+      return () => {
+        tg.MainButton.hide();
+        tg.MainButton.offClick(onMainCatalogClick);
+      };
     }
   }, [selectedSession]);
 
@@ -224,11 +269,14 @@ export default function App() {
     }
   };
 
-  const handleBooking = (session: Session) => {
-    AnalyticalLogger.trackClick(`booking_btn_${session.id}`, {
-      sessionId: session.id,
-      sessionPrice: session.price,
-    });
+  const handleBooking = (session: Session | null) => {
+    AnalyticalLogger.trackClick(
+      session ? `booking_btn_${session.id}` : "catalog_booking_btn",
+      {
+        sessionId: session?.id,
+        sessionPrice: session?.price,
+      },
+    );
 
     if (
       tg?.HapticFeedback &&
@@ -238,10 +286,14 @@ export default function App() {
       tg.HapticFeedback.notificationOccurred("success");
     }
 
-    AnalyticalLogger.trackConversion("TMA_BOOKING_LINK_OPEN", session.price, {
-      sessionId: session.id,
-      sessionTitle: session.title,
-    });
+    AnalyticalLogger.trackConversion(
+      "TMA_BOOKING_LINK_OPEN",
+      session?.price || 0,
+      {
+        sessionId: session?.id,
+        sessionTitle: session?.title,
+      },
+    );
 
     if (tg && typeof tg.openTelegramLink === "function") {
       tg.openTelegramLink("https://t.me/meta_manoir");
@@ -364,51 +416,91 @@ export default function App() {
         {/* SHOP HEADER */}
         {!selectedSession && (
           <header
-            className="bg-[var(--tg-theme-bg-color)] p-6 rounded-3xl border border-black/5 dark:border-white/5 flex flex-col justify-between items-center text-center mb-6 shadow-sm relative overflow-hidden"
+            className="bg-[var(--tg-theme-bg-color)] p-8 rounded-[32px] border border-black/5 dark:border-white/5 flex flex-col justify-between items-center text-center mb-6 shadow-xl relative overflow-hidden"
             id="main-header"
           >
-            <BadgeGlass className="mb-3">
-              ✨ Каталог услуг
+            {/* Subtle premium background glow */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-[var(--tg-theme-link-color)]/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[var(--tg-theme-link-color)]/20 rounded-full blur-3xl pointer-events-none" />
+
+            <BadgeGlass className="mb-4 relative z-10">
+              🌀 АНДРЕЙ ТРЕТЬЯКОВ
             </BadgeGlass>
             <h1
-              className="text-3xl font-extrabold tracking-tight text-[var(--tg-theme-text-color)]"
+              className="text-[32px] leading-[1.1] font-extrabold tracking-tight text-[var(--tg-theme-text-color)] drop-shadow-sm mb-3 relative z-10"
               id="title-main"
             >
               Сеансы и цены
             </h1>
             <p
-              className="text-[var(--tg-theme-hint-color)] mt-2 max-w-md mx-auto leading-[1.65]"
+              className="text-[var(--tg-theme-hint-color)] text-[15px] max-w-[280px] mx-auto leading-relaxed text-balance relative z-10"
               id="desc-main"
-              style={{ fontSize: "14px" }}
             >
-              Выберите подходящий вам метод. Глубокая работа с подсознанием,
-              которая поможет найти первопричины ваших запросов и вернуть
-              внутреннюю гармонию.
+              Здесь вы можете ознакомиться с актуальной стоимостью сеансов и
+              более подробно узнать о форматах работы.
             </p>
 
-            <div className="flex flex-col gap-3 w-full relative z-10 mt-6">
-              <a 
-                href="https://t.me/otzyvgyp" 
-                target="_blank" 
-                rel="noreferrer"
-                className="w-full py-3 px-6 rounded-2xl font-bold text-[14px] flex items-center justify-center gap-2 bg-[var(--tg-theme-link-color)] text-white shadow-sm hover:opacity-90 transition-opacity active:scale-[0.98]"
-              >
-                <MessageCircle className="w-4 h-4" />
-                Отзывы клиентов
-              </a>
+            <div className="flex flex-col gap-4 w-full relative z-10 mt-8">
+              <div className="flex items-center justify-center gap-4">
+                <a
+                  href="https://t.me/amemanoir"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-[56px] h-[56px] rounded-[22px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:scale-105 hover:shadow-md transition-all"
+                >
+                  <TelegramIcon className="w-[28px] h-[28px] text-[var(--tg-theme-text-color)]" />
+                </a>
+                <a
+                  href="https://vk.com/amemanoir"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-[56px] h-[56px] rounded-[22px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:scale-105 hover:shadow-md transition-all"
+                >
+                  <VkIcon className="w-[28px] h-[28px] text-[var(--tg-theme-text-color)]" />
+                </a>
+                <a
+                  href="https://youtube.com/@amemanoir"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-[56px] h-[56px] rounded-[22px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:scale-105 hover:shadow-md transition-all"
+                >
+                  <YoutubeIcon className="w-[28px] h-[28px] text-[var(--tg-theme-text-color)]" />
+                </a>
+                <a
+                  href="https://dzen.ru/amemanoir"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-[56px] h-[56px] rounded-[22px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:scale-105 hover:shadow-md transition-all"
+                >
+                  <DzenIcon className="w-[26px] h-[26px] text-[var(--tg-theme-text-color)]" />
+                </a>
+              </div>
 
-              <div className="flex items-center justify-center gap-3">
-                <a href="https://t.me/amemanoir" target="_blank" rel="noreferrer" className="w-[54px] h-[54px] rounded-[20px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:opacity-80 transition-opacity">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="currentColor"/><path fill="var(--tg-theme-bg-color, #ffffff)" d="m5.4 11.5 12.8-4.9c.6-.2 1.1.1.9.8l-2.2 10.3c-.2.7-.6.9-1.2.6l-3.3-2.4-1.6 1.5c-.2.2-.4.4-.8.4l.2-3.3 6.1-5.5c.3-.3-.1-.4-.4-.2l-7.5 4.7-3.2-1c-.7-.2-.7-.7.1-1z"/></svg>
+              <div className="flex flex-col sm:flex-row gap-3 mt-2">
+                <a
+                  href="https://solien.ru/"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-bg-color)] border border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)] shadow-[0_4px_12px_-4px_var(--tg-theme-link-color)] hover:bg-[var(--tg-theme-link-color)] hover:text-white transition-all active:scale-[0.98]"
+                >
+                  <Globe className="w-5 h-5" />
+                  Сайт
                 </a>
-                <a href="https://vk.com/amemanoir" target="_blank" rel="noreferrer" className="w-[54px] h-[54px] rounded-[20px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:opacity-80 transition-opacity">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M15.44 14.86c.46.46.96 1 1.44 1.55.19.21.42.45.51.72.08.27-.01.52-.29.64-.17.08-.37.11-.56.11h-1.85c-.3 0-.58-.09-.81-.28-.23-.19-.39-.46-.53-.71-.23-.42-.46-.84-.71-1.25-.16-.25-.36-.48-.62-.62-.23-.12-.48-.14-.71-.02-.26.13-.39.38-.39.68v1.56c0 .3-.13.51-.4.6-.53.16-1.08.21-1.63.19-1.55-.07-2.89-.57-4.02-1.63-1.35-1.3-2.33-2.92-3-4.71-.14-.37.02-.65.4-.65h1.91c.28 0 .5.13.62.39.44 1.1 1 2.11 1.74 2.99.15.18.32.34.54.41.22.08.41 0 .49-.22.08-.23.1-.47.1-.7v-3.75c-.01-.33-.1-.5-.43-.6-.21-.06-.17-.17-.08-.27.1-.1.24-.12.37-.12h3.13c.27.02.41.18.44.44v2.98c0 .27.19.41.41.32.2-.08.36-.24.5-.41.34-.43.64-.88.89-1.35.15-.3.3-.59.44-.9.11-.26.33-.39.61-.38h1.93c.11 0 .24 0 .34.03.25.06.37.22.32.47-.07.3-.21.55-.36.81-.34.6-.72 1.16-1.14 1.72-.21.28-.42.56-.54.9-.12.31-.03.59.23.83z"/></svg>
-                </a>
-                <a href="https://youtube.com/@amemanoir" target="_blank" rel="noreferrer" className="w-[54px] h-[54px] rounded-[20px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:opacity-80 transition-opacity">
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.632 2.632 0 0 0-1.854-1.854C18.094 3.86 12 3.86 12 3.86s-6.094 0-7.728.472A2.632 2.632 0 0 0 2.418 6.186C1.946 7.82 1.946 12 1.946 12s0 4.18.472 5.814a2.632 2.632 0 0 0 1.854 1.854C5.906 20.14 12 20.14 12 20.14s6.094 0 7.728-.472a2.632 2.632 0 0 0 1.854-1.854C22.054 16.18 22.054 12 22.054 12s0-4.18-.472-5.814zM9.946 15.482V8.518l6.304 3.482-6.304 3.482z"/></svg>
-                </a>
-                <a href="https://dzen.ru/amemanoir" target="_blank" rel="noreferrer" className="w-[54px] h-[54px] rounded-[20px] bg-[var(--tg-theme-secondary-bg-color)] border border-[rgba(128,128,128,0.1)] flex items-center justify-center text-[var(--tg-theme-text-color)] shadow-sm hover:opacity-80 transition-opacity font-bold tracking-tight" style={{ fontSize: '12px' }}>
-                  Дзен
+
+                <a
+                  href="https://t.me/otzyvgyp"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={handleLinkClick}
+                  className="w-full py-4 px-6 rounded-[20px] font-bold text-[15px] flex items-center justify-center gap-2 bg-[var(--tg-theme-link-color)] text-white shadow-[0_8px_16px_-6px_var(--tg-theme-link-color)] hover:shadow-[0_12px_20px_-8px_var(--tg-theme-link-color)] hover:opacity-95 transition-all active:scale-[0.98]"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Отзывы
                 </a>
               </div>
             </div>
@@ -503,14 +595,16 @@ export default function App() {
                 <h3 className="text-[20px] font-bold tracking-tight text-[var(--tg-theme-text-color)]">
                   Как проходит работа
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="flex flex-col gap-3">
                   {workSteps.map((step, i) => (
                     <div
                       key={i}
                       className="flex flex-col gap-2 p-4 rounded-[20px] bg-[var(--tg-theme-bg-color)] border border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.03)] shadow-sm"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-[14px] font-bold text-[var(--tg-theme-text-color)]">{step.title}</span>
+                        <span className="text-[14px] font-bold text-[var(--tg-theme-text-color)]">
+                          {step.title}
+                        </span>
                         <span className="text-[24px] font-black text-[var(--tg-theme-hint-color)] opacity-20">
                           {String(i + 1).padStart(2, "0")}
                         </span>
@@ -524,16 +618,33 @@ export default function App() {
               </div>
 
               <div className="mt-8 pt-8 border-t border-[rgba(0,0,0,0.05)] dark:border-[rgba(255,255,255,0.05)]">
-                <div className="flex flex-col items-start text-left mb-8">
+                <div className="flex flex-col items-center text-center mb-8">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-500 border border-red-100 dark:bg-red-500/10 dark:border-red-500/20 mb-4">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                    <span className="text-[11px] font-bold uppercase tracking-wider">ВАЖНАЯ ИНФОРМАЦИЯ</span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                    <span className="text-[11px] font-bold uppercase tracking-wider">
+                      ВАЖНАЯ ИНФОРМАЦИЯ
+                    </span>
                   </div>
                   <h2 className="text-[28px] sm:text-[32px] font-black tracking-tight text-[var(--tg-theme-text-color)] uppercase mb-3">
                     ПРОТИВОПОКАЗАНИЯ
                   </h2>
                   <p className="text-[14px] text-[var(--tg-theme-hint-color)] max-w-2xl leading-[1.6]">
-                    Методы работы с подсознанием являются мощным инструментом, который имеет строгие ограничения. Ознакомьтесь со списком противопоказаний перед записью.
+                    Методы работы с подсознанием являются мощным инструментом,
+                    который имеет строгие ограничения. Ознакомьтесь со списком
+                    противопоказаний перед записью.
                   </p>
                 </div>
 
@@ -541,32 +652,68 @@ export default function App() {
                   <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-red-100 dark:bg-red-500/20 flex items-center justify-center shrink-0">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="#ef4444"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                          <path d="M12 9v4" />
+                          <path d="M12 17h.01" />
+                        </svg>
                       </div>
-                      <h3 className="text-[18px] font-bold text-[var(--tg-theme-text-color)]">Строгие противопоказания к сеансам:</h3>
+                      <h3 className="text-[18px] font-bold text-[var(--tg-theme-text-color)]">
+                        Строгие противопоказания к сеансам:
+                      </h3>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                        {[
-                          "Психиатрические диагнозы (шизофрения, биполярное расстройство, клиническая депрессия в тяжелой стадии).",
-                          "Эпилепсия и судорожные синдромы.",
-                          "Острые психотические состояния, бред, галлюцинации.",
-                          "Органические поражения головного мозга, деменция.",
-                          "Состояние алкогольного или наркотического опьянения, а также период острой абстиненции.",
-                          "Тяжелые сердечно-сосудистые заболевания (недавно перенесенный инфаркт, инсульт).",
-                          "Беременность.",
-                          "Острые инфекционные заболевания с высокой температурой."
-                        ].map((item, idx) => (
-                          <div key={idx} className="flex items-start gap-2.5 text-left">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-[2px]"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
-                            <span className="text-[13px] text-[var(--tg-theme-text-color)] leading-[1.5] opacity-90 text-left">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-6 pt-4 border-t border-red-100 dark:border-red-900/30">
-                        <p className="text-[12px] italic text-[var(--tg-theme-hint-color)]">
-                          * Утаивание данных состояний при записи на сеанс перекладывает всю ответственность за возможные последствия на клиента.
-                        </p>
-                      </div>
+                      {[
+                        "Психиатрические диагнозы (шизофрения, биполярное расстройство, клиническая депрессия в тяжелой стадии).",
+                        "Эпилепсия и судорожные синдромы.",
+                        "Острые психотические состояния, бред, галлюцинации.",
+                        "Органические поражения головного мозга, деменция.",
+                        "Состояние алкогольного или наркотического опьянения, а также период острой абстиненции.",
+                        "Тяжелые сердечно-сосудистые заболевания (недавно перенесенный инфаркт, инсульт).",
+                        "Беременность.",
+                        "Острые инфекционные заболевания с высокой температурой.",
+                      ].map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2.5 text-left"
+                        >
+                          <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#ef4444"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="shrink-0 mt-[2px]"
+                          >
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="m15 9-6 6" />
+                            <path d="m9 9 6 6" />
+                          </svg>
+                          <span className="text-[13px] text-[var(--tg-theme-text-color)] leading-[1.5] opacity-90 text-left">
+                            {item}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-6 pt-4 border-t border-red-100 dark:border-red-900/30">
+                      <p className="text-[12px] italic text-[var(--tg-theme-hint-color)]">
+                        * Утаивание данных состояний при записи на сеанс
+                        перекладывает всю ответственность за возможные
+                        последствия на клиента.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -578,7 +725,8 @@ export default function App() {
                     Ответы на частые вопросы
                   </h2>
                   <p className="text-[14px] text-[var(--tg-theme-hint-color)]">
-                    Каждая ситуация уникальна. Если вашего вопроса здесь нет, напишите мне для индивидуальной беседы.
+                    Каждая ситуация уникальна. Если вашего вопроса здесь нет,
+                    напишите мне для индивидуальной беседы.
                   </p>
                 </div>
 
@@ -618,10 +766,12 @@ export default function App() {
                       className="rounded-[20px] bg-[var(--tg-theme-bg-color)] border border-[rgba(0,0,0,0.04)] dark:border-[rgba(255,255,255,0.03)] overflow-hidden transition-all duration-300"
                     >
                       <button
-                        onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                        onClick={() => toggleFaq(index)}
                         className="w-full text-left p-4 sm:p-5 flex items-start justify-between gap-4 focus:outline-none"
                       >
-                        <span className="text-[14px] font-bold text-[var(--tg-theme-text-color)] pr-4">{faq.q}</span>
+                        <span className="text-[14px] font-bold text-[var(--tg-theme-text-color)] pr-4">
+                          {faq.q}
+                        </span>
                         <div
                           className={`w-6 h-6 shrink-0 rounded-full flex items-center justify-center border transition-all duration-300 ${
                             expandedFaq === index
@@ -630,19 +780,25 @@ export default function App() {
                           }`}
                         >
                           <svg
-                            className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedFaq === index ? 'rotate-180' : ''}`}
+                            className={`w-3.5 h-3.5 transition-transform duration-300 ${expandedFaq === index ? "rotate-180" : ""}`}
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             strokeWidth="2.5"
                           >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M19 9l-7 7-7-7"
+                            />
                           </svg>
                         </div>
                       </button>
                       <div
                         className={`overflow-hidden transition-all duration-300 ${
-                          expandedFaq === index ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                          expandedFaq === index
+                            ? "max-h-[500px] opacity-100"
+                            : "max-h-0 opacity-0"
                         }`}
                       >
                         <div className="p-4 sm:p-5 pt-0 text-[13px] text-[var(--tg-theme-hint-color)] leading-[1.6]">
@@ -653,32 +809,6 @@ export default function App() {
                   ))}
                 </div>
               </div>
-
-              {/* Desktop / browser Simulation booking Button for catalog */}
-              {!isTelegram && (
-                <>
-                  <div className="h-[104px]"></div>
-                  <div
-                    className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent)",
-                    }}
-                  >
-                    <div className="max-w-md mx-auto px-4 pb-6 pt-10 pointer-events-auto">
-                      <button
-                        onClick={() => handleBooking(null)}
-                        className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98] btn-premium text-white`}
-                      >
-                        Записаться на сеанс
-                      </button>
-                      <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-3">
-                        В Telegram Mini App для записи используется нативная панель
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
             </motion.div>
           ) : (
             /* SESSION DETAILS VIEW */
@@ -691,14 +821,16 @@ export default function App() {
               className="space-y-5"
               id="detail-container"
             >
-              {/* Back navigation */}
-              <button
-                onClick={handleBack}
-                className="flex items-center gap-1.5 text-[var(--tg-theme-link-color)] hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>Вернуться</span>
-              </button>
+              {/* Back navigation (Hidden in Telegram as Native BackButton takes over) */}
+              {!isTelegram && (
+                <button
+                  onClick={handleBack}
+                  className="flex items-center gap-1.5 text-[var(--tg-theme-link-color)] hover:opacity-80 transition-opacity disabled:opacity-50 text-[14px] font-medium"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Вернуться</span>
+                </button>
+              )}
 
               {/* Cover visual Banner with rich SVG artwork */}
               <div className="relative h-56 rounded-3xl overflow-hidden border border-neutral-200/40 dark:border-neutral-800/40 shadow-md">
@@ -792,59 +924,60 @@ export default function App() {
                 </div>
               </div>
 
-              {selectedSession.longInfo && selectedSession.longInfo.steps && selectedSession.longInfo.steps.length > 0 && (
-                <div className="card p-5 rounded-3xl shadow-sm space-y-3">
-                  {selectedSession.longInfo.sectionTitle && (
-                    <h3 className="text-[16px] font-bold text-[var(--tg-theme-text-color)] flex items-start gap-2">
-                      <Sparkles className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
-                      <span>{selectedSession.longInfo.sectionTitle}</span>
-                    </h3>
-                  )}
-                  {selectedSession.longInfo.sectionText && (
-                    <p className="text-[14px] text-[var(--tg-theme-hint-color)] leading-[1.65]">
-                      {selectedSession.longInfo.sectionText}
-                    </p>
-                  )}
+              {selectedSession.longInfo &&
+                selectedSession.longInfo.steps &&
+                selectedSession.longInfo.steps.length > 0 && (
+                  <div className="card p-5 rounded-3xl shadow-sm space-y-3">
+                    {selectedSession.longInfo.sectionTitle && (
+                      <h3 className="text-[16px] font-bold text-[var(--tg-theme-text-color)] flex items-start gap-2">
+                        <Sparkles className="w-4 h-4 text-[var(--tg-theme-link-color)] shrink-0 mt-[4.5px]" />
+                        <span>{selectedSession.longInfo.sectionTitle}</span>
+                      </h3>
+                    )}
+                    {selectedSession.longInfo.sectionText && (
+                      <p className="text-[14px] text-[var(--tg-theme-hint-color)] leading-[1.65]">
+                        {selectedSession.longInfo.sectionText}
+                      </p>
+                    )}
 
-                  {selectedSession.longInfo.stepsTitle && (
-                    <h4 className="text-[14px] font-semibold text-[var(--tg-theme-text-color)] pt-1">
-                      {selectedSession.longInfo.stepsTitle}
-                    </h4>
-                  )}
+                    {selectedSession.longInfo.stepsTitle && (
+                      <h4 className="text-[14px] font-semibold text-[var(--tg-theme-text-color)] pt-1">
+                        {selectedSession.longInfo.stepsTitle}
+                      </h4>
+                    )}
 
-                  <div className="flex flex-col">
-                    {selectedSession.longInfo.steps.map((step, idx) => (
-                      <div
-                        key={idx}
-                        className="flex gap-4.5 pl-0.5 relative py-2.5"
-                      >
-                        <div className="relative w-5 shrink-0 self-stretch">
-                          {/* Continuous, overlapping seamless vertical line segments */}
-                          {selectedSession.longInfo.steps.length > 1 &&
-                            (idx === 0 ? (
-                              <div className="absolute top-1/2 bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
-                            ) : idx ===
-                              selectedSession.longInfo.steps.length - 1 ? (
-                              <div className="absolute top-[-10px] bottom-1/2 w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
-                            ) : (
-                              <div className="absolute top-[-10px] bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
-                            ))}
+                    <div className="flex flex-col">
+                      {selectedSession.longInfo.steps.map((step, idx) => (
+                        <div
+                          key={idx}
+                          className="flex gap-4.5 pl-0.5 relative py-2.5"
+                        >
+                          <div className="relative w-5 shrink-0 self-stretch">
+                            {/* Continuous, overlapping seamless vertical line segments */}
+                            {selectedSession.longInfo.steps.length > 1 &&
+                              (idx === 0 ? (
+                                <div className="absolute top-1/2 bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                              ) : idx ===
+                                selectedSession.longInfo.steps.length - 1 ? (
+                                <div className="absolute top-[-10px] bottom-1/2 w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                              ) : (
+                                <div className="absolute top-[-10px] bottom-[-10px] w-[2px] left-1/2 -translate-x-1/2 bg-[var(--tg-theme-link-color)] opacity-25" />
+                              ))}
 
-                          {/* Step Badge aligned exactly with the center of the text */}
-                          <div className="w-5 h-5 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border text-[11px] font-bold flex items-center justify-center shrink-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)]">
-                            {idx + 1}
+                            {/* Step Badge aligned exactly with the center of the text */}
+                            <div className="w-5 h-5 rounded-full bg-[var(--tg-theme-secondary-bg-color)] border text-[11px] font-bold flex items-center justify-center shrink-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 border-[var(--tg-theme-link-color)] text-[var(--tg-theme-link-color)]">
+                              {idx + 1}
+                            </div>
                           </div>
+                          <p
+                            className="text-[13.5px] text-[var(--tg-theme-text-color)] leading-[1.65] py-0.5 flex-1"
+                            dangerouslySetInnerHTML={{ __html: step }}
+                          />
                         </div>
-                        <p
-                          className="text-[13.5px] text-[var(--tg-theme-text-color)] leading-[1.65] py-0.5 flex-1"
-                          dangerouslySetInnerHTML={{ __html: step }}
-                        />
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-
+                )}
 
               {/* DETAILED WORKFLOW IN SESSION (Steps) */}
               {/* EXTRA BLOCKS AS SEPARATE CARDS */}
@@ -1013,40 +1146,59 @@ export default function App() {
                   </ul>
                 </div>
               )}
-
-              {/* Desktop / browser Simulation booking Button.
-                  (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}
-              {!isTelegram && (
-                <>
-                  {/* Invisible spacer to allow scrolling past the fixed button so it looks like a standard space-y-5 gap */}
-                  <div className="h-[104px]"></div>
-                  <div
-                    className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent)",
-                    }}
-                  >
-                    <div className="max-w-md mx-auto px-4 pb-6 pt-10 pointer-events-auto">
-                      <button
-                        id="btn-book-browser"
-                        onClick={() => handleBooking(selectedSession)}
-                        className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98] btn-premium text-white`}
-                      >
-                        <MessageCircle className="w-4 h-4" /> Забронировать за{" "}
-                        {selectedSession.price.toLocaleString("ru-RU")} ₽
-                      </button>
-                      <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-3">
-                        В Telegram Mini App для покупки используется нативная
-                        панель
-                      </p>
-                    </div>
-                  </div>
-                </>
-              )}
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Desktop / browser Simulation booking Button.
+            (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}
+        {!isMobileTelegram && (
+          <>
+            {/* Invisible spacer to allow scrolling past the fixed button */}
+            <div className="h-[96px]"></div>
+            <div
+              className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(to top, var(--tg-theme-bg-color, #ffffff) 65%, transparent)",
+              }}
+            >
+              <div className="max-w-md mx-auto px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-8 pointer-events-auto">
+                <button
+                  id={
+                    selectedSession
+                      ? "btn-book-browser"
+                      : "catalog-btn-book-browser"
+                  }
+                  onClick={() => handleBooking(selectedSession)}
+                  className={`w-full py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.98] ${selectedSession?.id === "past-lives" ? "btn-premium" : "bg-[var(--tg-theme-button-color)] hover:opacity-90 shadow-md text-[var(--tg-theme-button-text-color)]"}`}
+                  style={
+                    selectedSession?.id === "past-lives"
+                      ? undefined
+                      : {
+                          backgroundColor:
+                            "var(--tg-theme-button-color, #2481cc)",
+                          color: "var(--tg-theme-button-text-color, #ffffff)",
+                        }
+                  }
+                >
+                  {selectedSession ? (
+                    <>
+                      <MessageCircle className="w-4 h-4" /> Забронировать за{" "}
+                      {selectedSession.price.toLocaleString("ru-RU")} ₽
+                    </>
+                  ) : (
+                    "Записаться на сеанс"
+                  )}
+                </button>
+                <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-3">
+                  В мобильном Telegram сеанс бронируется через нативную нижнюю
+                  панель
+                </p>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* TOP FLOATING ENVIRONMENT BAR (FOR DEVELOPER DEMONSTRATION & DESIGN REVIEW)

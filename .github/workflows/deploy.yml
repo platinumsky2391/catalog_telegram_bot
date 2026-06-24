@@ -36,4 +36,4 @@ jobs:
           local-dir: ./dist/ 
           
           # Путь на хостинге Beget, куда заливать файлы. 
-          server-dir: /bot-solien/public_html/
+          server-dir: /

@@ -338,14 +338,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const isActualTelegram = tg.platform && tg.platform !== "unknown";
     const isMobileTelegram = ['android', 'android_x86', 'ios'].includes(tg.platform);
     
-    if (isActualTelegram) {
+    if (isMobileTelegram) {
       const inlineBtnBlock = document.getElementById("booking-action-bar");
       const catalogBtnBlock = document.getElementById("catalog-action-bar");
       if (inlineBtnBlock) inlineBtnBlock.style.display = "none";
       if (catalogBtnBlock) catalogBtnBlock.style.display = "none";
-    }
-
-    if (isMobileTelegram) {
+      
       const headerBtn = document.getElementById("back-btn-fallback");
       if (headerBtn) headerBtn.style.display = "none";
     }
@@ -357,9 +355,11 @@ window.addEventListener("DOMContentLoaded", () => {
       theme: tg.colorScheme
     });
 
-    tg.MainButton.setText("Записаться на сеанс");
-    tg.MainButton.show();
-    tg.MainButton.onClick(bookSession);
+    if (isMobileTelegram) {
+      tg.MainButton.setText("Записаться на сеанс");
+      tg.MainButton.show();
+      tg.MainButton.onClick(bookSession);
+    }
   } else {
     Logger.info("SIMULATOR_INITIALIZED");
   }
@@ -944,25 +944,29 @@ function showDetail(session) {
 
   // Настройка нативных кнопок Telegram
   if (tg) {
-    // Включение кнопки НАЗАД
-    tg.BackButton.show();
-    tg.BackButton.onClick(hideDetail);
+    const isMobileTelegram = ['android', 'android_x86', 'ios'].includes(tg.platform);
 
-    // Включение Главной Кнопки Бронирования нативного дизайна Telegram
-    if (session.id === "past-lives") {
-      tg.MainButton.setParams({
-        color: "#4f46e5",
-        text_color: "#ffffff"
-      });
-    } else {
-      tg.MainButton.setParams({
-        color: tg.themeParams.button_color || "#2481cc",
-        text_color: tg.themeParams.button_text_color || "#ffffff"
-      });
+    if (isMobileTelegram) {
+      // Включение кнопки НАЗАД
+      tg.BackButton.show();
+      tg.BackButton.onClick(hideDetail);
+
+      // Включение Главной Кнопки Бронирования нативного дизайна Telegram
+      if (session.id === "past-lives") {
+        tg.MainButton.setParams({
+          color: "#4f46e5",
+          text_color: "#ffffff"
+        });
+      } else {
+        tg.MainButton.setParams({
+          color: tg.themeParams.button_color || "#2481cc",
+          text_color: tg.themeParams.button_text_color || "#ffffff"
+        });
+      }
+      tg.MainButton.setText("Записаться на сеанс");
+      tg.MainButton.show();
+      tg.MainButton.onClick(bookSession);
     }
-    tg.MainButton.setText(`Забронировать (${session.price.toLocaleString("ru-RU")} ₽)`);
-    tg.MainButton.show();
-    tg.MainButton.onClick(bookSession);
   }
 }
 
@@ -1007,10 +1011,16 @@ function hideDetail() {
     tg.BackButton.hide();
     tg.BackButton.offClick(hideDetail);
     
-    tg.MainButton.setText("Записаться на сеанс");
-    tg.MainButton.show();
-    tg.MainButton.offClick(bookSession);
-    tg.MainButton.onClick(bookSession);
+    const isMobileTelegram = ['android', 'android_x86', 'ios'].includes(tg.platform);
+    if (isMobileTelegram) {
+      tg.MainButton.setText("Записаться на сеанс");
+      tg.MainButton.show();
+      tg.MainButton.offClick(bookSession);
+      tg.MainButton.onClick(bookSession);
+    } else {
+      tg.MainButton.hide();
+      tg.MainButton.offClick(bookSession);
+    }
   }
 }
 

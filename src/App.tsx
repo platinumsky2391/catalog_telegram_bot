@@ -176,17 +176,19 @@ export default function App() {
 
     if (selectedSession) {
       // Configure Native Telegram Back Button
-      tg.BackButton.show();
+      if (isMobileTelegram) {
+        tg.BackButton.show();
+      }
       const onBackClick = () => {
         handleBack();
       };
       tg.BackButton.onClick(onBackClick);
 
       // Configure Native Telegram Main Button
-      tg.MainButton.setText(
-        `Забронировать сеанс (${selectedSession.price.toLocaleString("ru-RU")} ₽)`,
-      );
-      tg.MainButton.show();
+      if (isMobileTelegram) {
+        tg.MainButton.setText("Записаться на сеанс");
+        tg.MainButton.show();
+      }
 
       const onMainClick = () => {
         handleBooking(selectedSession);
@@ -202,12 +204,14 @@ export default function App() {
     } else {
       tg.BackButton.hide();
 
-      tg.MainButton.setText("Записаться на сеанс");
-      tg.MainButton.setParams({
-        color: tg.themeParams?.button_color || "#2481cc",
-        text_color: tg.themeParams?.button_text_color || "#ffffff",
-      });
-      tg.MainButton.show();
+      if (isMobileTelegram) {
+        tg.MainButton.setText("Записаться на сеанс");
+        tg.MainButton.setParams({
+          color: tg.themeParams?.button_color || "#2481cc",
+          text_color: tg.themeParams?.button_text_color || "#ffffff",
+        });
+        tg.MainButton.show();
+      }
 
       const onMainCatalogClick = () => {
         handleBooking(null);
@@ -219,7 +223,7 @@ export default function App() {
         tg.MainButton.offClick(onMainCatalogClick);
       };
     }
-  }, [selectedSession]);
+  }, [selectedSession, isTelegram, isMobileTelegram]);
 
   const handleSessionClick = (session: Session) => {
     AnalyticalLogger.trackClick(`session_card_${session.id}`, {
@@ -1161,8 +1165,8 @@ export default function App() {
       </motion.div>
 
       {/* Desktop / browser Simulation booking Button.
-          (Hidden if inside Telegram since Telegram's native MainButton takes this job) */}
-      {!isTelegram && (
+          (Hidden if inside mobile Telegram since Telegram's native MainButton takes this job) */}
+      {!isMobileTelegram && (
         <>
           {/* Invisible spacer to allow scrolling past the fixed button */}
           <div className="h-[96px]"></div>
@@ -1192,14 +1196,7 @@ export default function App() {
                       }
                 }
               >
-                {selectedSession ? (
-                  <>
-                    <MessageCircle className="w-4 h-4" /> Забронировать за{" "}
-                    {selectedSession.price.toLocaleString("ru-RU")} ₽
-                  </>
-                ) : (
-                  "Записаться на сеанс"
-                )}
+                <MessageCircle className="w-4 h-4" /> Записаться на сеанс
               </button>
               <p className="text-[10px] text-center text-[var(--tg-theme-hint-color)] mt-3">
                 В мобильном Telegram сеанс бронируется через нативную нижнюю
@@ -1208,67 +1205,6 @@ export default function App() {
             </div>
           </div>
         </>
-      )}
-
-      {/* TOP FLOATING ENVIRONMENT BAR (FOR DEVELOPER DEMONSTRATION & DESIGN REVIEW)
-          This simulated panel is hidden when running inside real Telegram context */}
-      {!isTelegram && (
-        <div
-          className="fixed bottom-4 left-4 right-4 max-w-xs mx-auto bg-neutral-900/90 text-white rounded-2xl p-3 shadow-2xl backdrop-blur-md border border-neutral-700/50 flex flex-col gap-2 z-50 text-xs"
-          id="demo-controls"
-        >
-          <div className="flex justify-between items-center">
-            <span className="font-bold flex items-center gap-1.5 text-indigo-300">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              TMA Симулятор
-            </span>
-            <span className="text-[10px] px-1.5 py-0.5 bg-neutral-800 rounded font-mono text-neutral-400">
-              {isTelegram ? "Telegram Client" : "Разработка (Web)"}
-            </span>
-          </div>
-
-          <p className="text-[10px] text-neutral-400 leading-[1.65]">
-            Этот тулбар виден только в браузере для демонстрации адаптивности
-            цвета и тем. Скрыт внутри Telegram.
-          </p>
-
-          <div className="flex gap-2.5 mt-1 border-t border-neutral-800 pt-2">
-            <button
-              id="toggle-simulator-theme"
-              onClick={toggleTheme}
-              className="flex-1 py-1.5 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 active:scale-95 transition-all text-[11px] font-medium flex items-center justify-center gap-1.5"
-            >
-              {themeMode === "light" ? (
-                <>
-                  <Moon className="w-3.5 h-3.5 text-indigo-400" /> Тёмная тема
-                </>
-              ) : (
-                <>
-                  <Sun className="w-3.5 h-3.5 text-amber-400" /> Светлая тема
-                </>
-              )}
-            </button>
-
-            {!isTelegram && (
-              <button
-                id="simulate-tg-status"
-                onClick={() => {
-                  setIsTelegram(!isTelegram);
-                  if (
-                    tg?.HapticFeedback &&
-                    typeof tg.isVersionAtLeast === "function" &&
-                    tg.isVersionAtLeast("6.1")
-                  ) {
-                    tg.HapticFeedback.impactOccurred("medium");
-                  }
-                }}
-                className="py-1.5 px-2.5 rounded-lg bg-neutral-800 text-neutral-300 hover:bg-neutral-700 text-[10px] font-mono"
-              >
-                Скрывать кнопки
-              </button>
-            )}
-          </div>
-        </div>
       )}
     </div>
   );

@@ -1,0 +1,6 @@
+PassengerEnabled On
+PassengerAppRoot /home/p/platines/bot-solien
+PassengerAppType node
+PassengerStartupFile server.cjs
+PassengerNodejs /home/p/platines/bot-solien/bin/node
+PassengerAppEnv production

@@ -1,39 +1,51 @@
-name: Deploy to Beget
+name: Deploy Telegram Bot to Beget
 
 on:
   push:
     branches:
-      - main # Укажите ветку, при пуше в которую нужно обновлять сервер (main или master)
-  workflow_dispatch: # Позволяет запускать деплой вручную из интерфейса GitHub
+      - main # Скрипт срабатывает каждый раз, когда вы делаете push в ветку main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: 📥 Оформление кода (Checkout)
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: ⚙️ Установка Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Используем актуальную версию Node
+          node-version: 20
 
-      - name: 📦 Установка зависимостей
-        run: npm ci || npm install
+      - name: Install dependencies and Build Frontend
+        run: |
+          npm install
+          npm run build # Сборка вашего Mini App (создает актуальную папку dist)
 
-      - name: 🏗 Сборка проекта (Build)
-        run: npm run build
-        # Команда сборки. Обычно собирает файлы в папку dist/
-
-      - name: 🚀 Деплой на Beget (FTP)
+      - name: Sync files to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          # Папка, в которой лежит собранный проект (обычно dist/ или build/).
-          # Если вы загружаете не React, а обычную папку telegram-mini-app, замените на её название: ./telegram-mini-app/
-          local-dir: ./dist/ 
-          
-          # Путь на хостинге Beget, куда заливать файлы. 
-          server-dir: /
+          server: ${{ secrets.BEGET_HOST }}
+          username: ${{ secrets.BEGET_USERNAME }}
+          password: ${{ secrets.BEGET_PASSWORD }}
+          local-dir: ./
+          server-dir: /bot-solien/ # Загрузка идет строго в корень домена, а не в public_html
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            **/.env
+            **/bin/**
+            **/tmp/**
+
+      - name: Restart Node.js Server on Beget via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.BEGET_HOST }}
+          username: ${{ secrets.BEGET_USERNAME }}
+          password: ${{ secrets.BEGET_PASSWORD }}
+          port: 22
+          script: |
+            cd ~/bot-solien
+            npm install --production # Обновляем модули на сервере, если в package.json появились новые
+            touch tmp/restart.txt # Даем команду Passenger перезапустить бота с новым кодом

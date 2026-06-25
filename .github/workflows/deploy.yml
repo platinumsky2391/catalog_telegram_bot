@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies and Build Frontend
         run: |
@@ -26,6 +26,8 @@ jobs:
       - name: Sync files to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
+          # Убедитесь, что в GitHub -> Settings -> Secrets and variables -> Actions
+          # добавлены эти секреты (или переименуйте их обратно в FTP_SERVER, FTP_USERNAME и т.д.)
           server: ${{ secrets.BEGET_HOST }}
           username: ${{ secrets.BEGET_USERNAME }}
           password: ${{ secrets.BEGET_PASSWORD }}

@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: / # Загрузка идет строго в корень домена, а не в public_html
+          server-dir: /bot-solien/ # Загрузка идет строго в корень домена, а не в public_html
           exclude: |
             **/.git*
             **/node_modules/**
@@ -46,6 +46,8 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
           script: |
-            cd ~/bot-solien
+            cd /home/p/platines/bot-solien
+            export PATH=/home/p/platines/bot-solien/bin:$PATH
             npm install --production # Обновляем модули на сервере, если в package.json появились новые
+            mkdir -p tmp
             touch tmp/restart.txt # Даем команду Passenger перезапустить бота с новым кодом

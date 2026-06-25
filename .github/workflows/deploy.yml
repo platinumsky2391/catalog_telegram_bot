@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /bot-solien/ # Загрузка идет строго в корень домена, а не в public_html
+          server-dir: / # Загрузка идет строго в корень домена, а не в public_html
           exclude: |
             **/.git*
             **/node_modules/**

@@ -26,11 +26,9 @@ jobs:
       - name: Sync files to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          # Убедитесь, что в GitHub -> Settings -> Secrets and variables -> Actions
-          # добавлены эти секреты (или переименуйте их обратно в FTP_SERVER, FTP_USERNAME и т.д.)
-          server: ${{ secrets.BEGET_HOST }}
-          username: ${{ secrets.BEGET_USERNAME }}
-          password: ${{ secrets.BEGET_PASSWORD }}
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
           server-dir: /bot-solien/ # Загрузка идет строго в корень домена, а не в public_html
           exclude: |
@@ -43,9 +41,9 @@ jobs:
       - name: Restart Node.js Server on Beget via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.BEGET_HOST }}
-          username: ${{ secrets.BEGET_USERNAME }}
-          password: ${{ secrets.BEGET_PASSWORD }}
+          host: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
           port: 22
           script: |
             cd ~/bot-solien

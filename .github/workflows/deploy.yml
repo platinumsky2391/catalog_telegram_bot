@@ -47,6 +47,5 @@ jobs:
           port: 22
           script: |
             cd /home/p/platines/bot-solien
-            export PATH=/home/p/platines/bot-solien/bin:$PATH
             mkdir -p tmp
-            touch tmp/restart.txt # Даем команду Passenger перезапустить бота с новым кодом
+            touch tmp/restart.txt

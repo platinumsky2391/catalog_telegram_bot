@@ -23,20 +23,24 @@ jobs:
           npm install
           npm run build # Сборка вашего Mini App (создает актуальную папку dist)
 
+      - name: Prepare production files
+        run: |
+          mkdir deploy_build
+          cp server.cjs deploy_build/
+          cp server.cjs.map deploy_build/ 2>/dev/null || true
+          cp package.json deploy_build/
+          cp package-lock.json deploy_build/ 2>/dev/null || true
+          cp -r dist deploy_build/
+          cp app.js deploy_build/ 2>/dev/null || true
+
       - name: Sync files to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: / # Загрузка идет в корень FTP. Если в GitHub Actions все копируется в public_html/public_html, значит FTP-пользователь привязан к другой папке, нужно настроить FTP на папку bot-solien
-          exclude: |
-            **/.git*
-            **/node_modules/**
-            **/.env
-            **/bin/**
-            **/tmp/**
+          local-dir: ./deploy_build/
+          server-dir: /bot-solien/ # Бэкенд-файлы загружаются в папку домена (выше public_html) согласно правилу!
 
       - name: Restart Node.js Server on Beget via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -45,10 +49,16 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
+          script_stop: true
           script: |
+            echo "Переходим в директорию домена..."
             cd /home/p/platines/bot-solien
             
-            # Убеждаемся, что .htaccess для Passenger существует в public_html
+            echo "Удаляем мусор от предыдущих загрузок (исходники)..."
+            rm -rf src assets img telegram-mini-app .github
+            rm -f *.ts *.tsx *.html *.md vite.config.ts tsconfig.json metadata.json
+            
+            echo "Создаем .htaccess для Passenger в public_html..."
             mkdir -p public_html
             cat << 'EOF' > public_html/.htaccess
             PassengerEnabled On
@@ -59,5 +69,7 @@ jobs:
             PassengerAppEnv production
             EOF
             
+            echo "Перезапуск Passenger..."
             mkdir -p tmp
             touch tmp/restart.txt
+            echo "Деплой успешно завершен!"

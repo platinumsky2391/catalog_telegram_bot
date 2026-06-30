@@ -32,6 +32,17 @@ jobs:
           cp package-lock.json deploy_build/ 2>/dev/null || true
           cp -r dist deploy_build/
           cp app.js deploy_build/ 2>/dev/null || true
+          
+          # Создаем public_html и .htaccess прямо в папке для деплоя, чтобы FTP перенес их на сервер
+          mkdir -p deploy_build/public_html
+          cat << 'EOF' > deploy_build/public_html/.htaccess
+          PassengerEnabled On
+          PassengerAppRoot /home/p/platines/bot-solien
+          PassengerAppType node
+          PassengerStartupFile server.cjs
+          PassengerNodejs /home/p/platines/bot-solien/bin/node
+          PassengerAppEnv production
+          EOF
 
       - name: Sync files to Beget via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -44,7 +55,6 @@ jobs:
           exclude: |
             **/.env
             **/node_modules/**
-            **/public_html/**
             **/bin/**
             **/tmp/**
 
@@ -69,17 +79,6 @@ jobs:
             echo "Удаляем мусор от предыдущих загрузок (исходники)..."
             rm -rf src assets img telegram-mini-app .github
             rm -f *.ts *.tsx *.html *.md vite.config.ts tsconfig.json metadata.json
-            
-            echo "Создаем .htaccess для Passenger в public_html..."
-            mkdir -p public_html
-            cat << 'EOF' > public_html/.htaccess
-            PassengerEnabled On
-            PassengerAppRoot /home/p/platines/bot-solien
-            PassengerAppType node
-            PassengerStartupFile server.cjs
-            PassengerNodejs /home/p/platines/bot-solien/bin/node
-            PassengerAppEnv production
-            EOF
             
             echo "Перезапуск Passenger..."
             mkdir -p tmp

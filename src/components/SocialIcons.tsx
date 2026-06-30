@@ -1,15 +1,15 @@
 import { FaTelegram, FaVk, FaYoutube } from "react-icons/fa";
 
 export const TelegramIcon = ({ className }: { className?: string }) => (
-  <FaTelegram className={className} />
+  <FaTelegram {...({ className } as any)} />
 );
 
 export const VkIcon = ({ className }: { className?: string }) => (
-  <FaVk className={className} />
+  <FaVk {...({ className } as any)} />
 );
 
 export const YoutubeIcon = ({ className }: { className?: string }) => (
-  <FaYoutube className={className} />
+  <FaYoutube {...({ className } as any)} />
 );
 
 export const DzenIcon = ({ className }: { className?: string }) => (

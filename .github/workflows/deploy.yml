@@ -40,7 +40,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./deploy_build/
-          server-dir: /bot-solien/ # Бэкенд-файлы загружаются в папку домена (выше public_html) согласно правилу!
+          server-dir: / # Так как FTP-пользователь уже настроен на папку bot-solien, копируем прямо в корень FTP
 
       - name: Restart Node.js Server on Beget via SSH
         uses: appleboy/ssh-action@v1.0.3

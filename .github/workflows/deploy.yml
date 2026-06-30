@@ -23,14 +23,20 @@ jobs:
           npm install
           npm run build # Сборка вашего Mini App (создает актуальную папку dist)
 
-      - name: Sync files to Beget via SSH/rsync
-        env:
-          SSHPASS: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p 22 ${{ secrets.FTP_SERVER }} >> ~/.ssh/known_hosts
-          sudo apt-get install -y sshpass rsync
-          sshpass -e rsync -avz --exclude='.git/' --exclude='node_modules/' --exclude='.env' --exclude='bin/' --exclude='tmp/' ./ ${{ secrets.FTP_USERNAME }}@${{ secrets.FTP_SERVER }}:/home/p/platines/bot-solien/
+      - name: Sync files to Beget via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: / # Загрузка идет в корень FTP. Если в GitHub Actions все копируется в public_html/public_html, значит FTP-пользователь привязан к другой папке, нужно настроить FTP на папку bot-solien
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            **/.env
+            **/bin/**
+            **/tmp/**
 
       - name: Restart Node.js Server on Beget via SSH
         uses: appleboy/ssh-action@v1.0.3

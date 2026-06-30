@@ -84,8 +84,13 @@ if (process.env.DB_HOST && process.env.DB_USER && process.env.DB_NAME) {
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
   `).then(() => {
     console.log("[INFO] Таблица users успешно проверена/создана в базе данных.");
-  }).catch((err) => {
-    console.error("[ERROR] Ошибка при создании таблицы users:", err);
+  }).catch((err: any) => {
+    if (err.code === 'ECONNREFUSED') {
+      console.warn(`[WARN] База данных недоступна (${err.address}:${err.port}). Сохранение в БД отключено.`);
+      pool = null; // Отключаем БД для текущего запуска, чтобы не было ошибок при работе
+    } else {
+      console.error("[ERROR] Ошибка при создании таблицы users:", err.message || err);
+    }
   });
 } else {
   console.log("[WARN] Параметры базы данных (DB_HOST, DB_USER, DB_NAME) не заданы. Сохранение пользователей отключено.");

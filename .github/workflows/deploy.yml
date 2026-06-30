@@ -47,5 +47,17 @@ jobs:
           port: 22
           script: |
             cd /home/p/platines/bot-solien
+            
+            # Убеждаемся, что .htaccess для Passenger существует в public_html
+            mkdir -p public_html
+            cat << 'EOF' > public_html/.htaccess
+            PassengerEnabled On
+            PassengerAppRoot /home/p/platines/bot-solien
+            PassengerAppType node
+            PassengerStartupFile server.cjs
+            PassengerNodejs /home/p/platines/bot-solien/bin/node
+            PassengerAppEnv production
+            EOF
+            
             mkdir -p tmp
             touch tmp/restart.txt

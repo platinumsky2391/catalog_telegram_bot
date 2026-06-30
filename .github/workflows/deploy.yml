@@ -41,6 +41,12 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./deploy_build/
           server-dir: / # Так как FTP-пользователь уже настроен на папку bot-solien, копируем прямо в корень FTP
+          exclude: |
+            **/.env
+            **/node_modules/**
+            **/public_html/**
+            **/bin/**
+            **/tmp/**
 
       - name: Restart Node.js Server on Beget via SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -53,6 +59,12 @@ jobs:
           script: |
             echo "Переходим в директорию домена..."
             cd /home/p/platines/bot-solien
+            
+            echo "Устанавливаем правильный PATH..."
+            export PATH=/home/p/platines/bot-solien/bin:$PATH
+            
+            echo "Обновляем зависимости (node_modules)..."
+            npm install --production
             
             echo "Удаляем мусор от предыдущих загрузок (исходники)..."
             rm -rf src assets img telegram-mini-app .github

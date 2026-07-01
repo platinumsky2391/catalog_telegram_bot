@@ -55,7 +55,7 @@ const BadgeGlass = ({
   return (
     <div className={`${baseClasses} ${className}`}>
       <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,rgba(128,128,128,0.05)_0%,rgba(128,128,128,0.4)_50%,rgba(128,128,128,0.05)_100%)] dark:bg-[conic-gradient(from_90deg_at_50%_50%,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.4)_50%,rgba(255,255,255,0.05)_100%)]" />
-      <span className="inline-flex h-full w-full cursor-default items-center justify-center rounded-full bg-[var(--tg-theme-bg-color)] px-4 py-1.5 backdrop-blur-3xl text-[var(--tg-theme-text-color)] gap-1.5">
+      <span className="inline-flex h-full w-full cursor-default items-center justify-center rounded-full bg-[var(--tg-theme-bg-color)] px-4 py-1.5 backdrop-blur-3xl transform-gpu text-[var(--tg-theme-text-color)] gap-1.5">
         {children}
       </span>
     </div>
@@ -332,7 +332,9 @@ export default function App() {
           <img
             src={pastLivesImg}
             alt="Путешествие в прошлые жизни"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
             referrerPolicy="no-referrer"
             onError={(e) => {
               // Fallback to high-quality spiritual illustration if image fails
@@ -346,7 +348,9 @@ export default function App() {
           <img
             src={hypnotherapyImg}
             alt="Гипнотерапия (Избавление от страхов)"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
             referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.src =
@@ -359,7 +363,9 @@ export default function App() {
           <img
             src={higherSelfImg}
             alt="Ответы от Высшего Я"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
             referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.src =
@@ -372,7 +378,9 @@ export default function App() {
           <img
             src={energyCleansingImg}
             alt="Снятие энергетических блоков"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 will-change-transform"
             referrerPolicy="no-referrer"
             onError={(e) => {
               e.currentTarget.src =
@@ -570,7 +578,7 @@ export default function App() {
                       </BadgeGlass>
 
                       {/* Price Tag badge inside image */}
-                      <div className="absolute bottom-3 right-3 bg-black/40 backdrop-blur-md px-3.5 py-1 rounded-xl border border-white/15 text-white font-semibold text-sm shadow-md">
+                      <div className="absolute bottom-3 right-3 bg-black/40 backdrop-blur-md transform-gpu px-3.5 py-1 rounded-xl border border-white/15 text-white font-semibold text-sm shadow-md">
                         {session.price.toLocaleString("ru-RU")} ₽
                       </div>
 

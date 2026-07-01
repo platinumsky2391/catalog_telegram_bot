@@ -297,11 +297,19 @@ async function initApp() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[SUCCESS] Fullstack Server running on http://0.0.0.0:${PORT}`);
+  app.listen(PORT, () => {
+    console.log(`[SUCCESS] Fullstack Server running on port ${PORT}`);
   });
 }
 
+process.on("uncaughtException", (err) => {
+  fs.appendFileSync("error.log", `[Uncaught] ${err.message}\n${err.stack}\n`);
+});
+process.on("unhandledRejection", (err) => {
+  fs.appendFileSync("error.log", `[Unhandled] ${err}\n`);
+});
+
 initApp().catch((err) => {
   console.error("[FATAL] Ошибка запуска сервера:", err);
+  fs.appendFileSync("error.log", `[FATAL] ${err.message}\n${err.stack}\n`);
 });

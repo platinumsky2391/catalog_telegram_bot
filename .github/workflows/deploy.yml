@@ -60,9 +60,6 @@ jobs:
             echo "Устанавливаем правильный PATH..."
             export PATH=/home/p/platines/bot-solien/bin:$PATH
             
-            echo "Обновляем зависимости (node_modules)..."
-            npm install --production
-            
             echo "Удаляем мусор от предыдущих загрузок (исходники)..."
             rm -rf src assets img telegram-mini-app .github || true
             rm -f *.ts *.tsx *.html *.md vite.config.ts tsconfig.json metadata.json || true

@@ -33,6 +33,14 @@ jobs:
           cp -r dist deploy_build/
           cp app.js deploy_build/ 2>/dev/null || true
 
+          # Скачиваем бинарник Node.js, так как он мог удалиться
+          echo "Downloading Node.js..."
+          mkdir -p deploy_build/bin
+          curl -sO https://nodejs.org/dist/v20.11.1/node-v20.11.1-linux-x64.tar.xz
+          tar -xJf node-v20.11.1-linux-x64.tar.xz node-v20.11.1-linux-x64/bin/node --strip-components=2
+          mv node deploy_build/bin/node
+          chmod +x deploy_build/bin/node
+
           # Создаем public_html и .htaccess прямо в папке для деплоя
           mkdir -p deploy_build/public_html
           echo "PassengerEnabled On" > deploy_build/public_html/.htaccess
@@ -40,7 +48,7 @@ jobs:
           echo "PassengerAppRoot /home/p/platines/bot-solien" >> deploy_build/public_html/.htaccess
           echo "PassengerAppType node" >> deploy_build/public_html/.htaccess
           echo "PassengerStartupFile server.cjs" >> deploy_build/public_html/.htaccess
-          echo "PassengerNodejs /opt/nodejs/20/bin/node" >> deploy_build/public_html/.htaccess
+          echo "PassengerNodejs /home/p/platines/bot-solien/bin/node" >> deploy_build/public_html/.htaccess
           echo "PassengerAppEnv production" >> deploy_build/public_html/.htaccess
 
           # Создаем tmp/restart.txt для перезапуска Passenger
@@ -58,4 +66,3 @@ jobs:
           exclude: |
             **/.env
             **/node_modules/**
-            **/bin/**

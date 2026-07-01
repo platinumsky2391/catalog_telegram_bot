@@ -137,11 +137,14 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
             INSERT INTO users (id, first_name, last_name, username, language_code)
             VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
-              first_name = VALUES(first_name),
-              last_name = VALUES(last_name),
-              username = VALUES(username),
-              language_code = VALUES(language_code)
-          `, [id, first_name || null, last_name || null, username || null, language_code || null]);
+              first_name = ?,
+              last_name = ?,
+              username = ?,
+              language_code = ?
+          `, [
+            id, first_name || null, last_name || null, username || null, language_code || null,
+            first_name || null, last_name || null, username || null, language_code || null
+          ]);
           console.log(`[INFO] Пользователь ${id} успешно сохранен/обновлен в базе данных.`);
         } catch (err: any) {
           console.error(`[ERROR] Не удалось сохранить пользователя ${ctx.from.id} в базу данных:`, err.message);
@@ -256,11 +259,14 @@ app.post("/api/save_user", async (req, res) => {
           INSERT INTO users (id, first_name, last_name, username, language_code)
           VALUES (?, ?, ?, ?, ?)
           ON DUPLICATE KEY UPDATE
-            first_name = VALUES(first_name),
-            last_name = VALUES(last_name),
-            username = VALUES(username),
-            language_code = VALUES(language_code)
-        `, [id, first_name || null, last_name || null, username || null, language_code || null]);
+            first_name = ?,
+            last_name = ?,
+            username = ?,
+            language_code = ?
+        `, [
+          id, first_name || null, last_name || null, username || null, language_code || null,
+          first_name || null, last_name || null, username || null, language_code || null
+        ]);
         console.log(`[INFO] Посетитель ${id} (WebApp) успешно сохранен в БД.`);
       } catch (dbErr: any) {
         console.error(`[ERROR] Ошибка записи в БД для пользователя ${id}:`, dbErr.message);

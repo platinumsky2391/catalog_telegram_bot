@@ -18,6 +18,7 @@ function findEnvFile(startDir: string, maxLevels = 10): string | null {
     path.join(startDir, "../../.env"),
     path.join(startDir, "../bot-solien/.env"),
     path.join(startDir, "../../bot-solien/.env"),
+    "/home/p/platines/bot-solien/.env"
   ];
 
   for (const p of possiblePaths) {
@@ -279,6 +280,19 @@ app.post("/api/book", async (req, res) => {
         console.log(`[INFO] Сообщение-подтверждение успешно отправлено пользователю ${user.id}`);
       } catch (tgErr) {
         console.warn(`[WARN] Не удалось отправить сообщение в Telegram пользователю ${user.id}:`, tgErr);
+      }
+      
+      // Send notification to Admin Channel
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
+      try {
+        const rawUsernameTg = user.username ? `(@${user.username})` : "";
+        await bot.telegram.sendMessage(
+          adminChannelId, 
+          `💰 *Новое бронирование:*\nСеанс: ${title}\nЦена: ${price} руб\nПользователь: ${user.first_name || ""} ${rawUsernameTg}`.trim(),
+          { parse_mode: "Markdown" }
+        );
+      } catch (err) {
+        console.error(`[ERROR] Не удалось отправить уведомление о брони в админ-канал:`, err);
       }
     }
 

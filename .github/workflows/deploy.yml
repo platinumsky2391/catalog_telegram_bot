@@ -40,7 +40,6 @@ jobs:
           echo "PassengerAppRoot /home/p/platines/bot-solien" >> deploy_build/public_html/.htaccess
           echo "PassengerAppType node" >> deploy_build/public_html/.htaccess
           echo "PassengerStartupFile server.cjs" >> deploy_build/public_html/.htaccess
-          echo "PassengerNodejs /home/p/platines/bot-solien/bin/node" >> deploy_build/public_html/.htaccess
           echo "PassengerAppEnv production" >> deploy_build/public_html/.htaccess
           
           # Создаем tmp/restart.txt для перезапуска Passenger
@@ -85,7 +84,6 @@ jobs:
             echo "PassengerAppRoot /home/p/platines/bot-solien" >> public_html/.htaccess
             echo "PassengerAppType node" >> public_html/.htaccess
             echo "PassengerStartupFile server.cjs" >> public_html/.htaccess
-            echo "PassengerNodejs /home/p/platines/bot-solien/bin/node" >> public_html/.htaccess
             echo "PassengerAppEnv production" >> public_html/.htaccess
             
             mkdir -p tmp

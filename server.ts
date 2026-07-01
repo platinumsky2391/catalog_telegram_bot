@@ -140,8 +140,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
               first_name = VALUES(first_name),
               last_name = VALUES(last_name),
               username = VALUES(username),
-              language_code = VALUES(language_code),
-              updated_at = CURRENT_TIMESTAMP
+              language_code = VALUES(language_code)
           `, [id, first_name || null, last_name || null, username || null, language_code || null]);
           console.log(`[INFO] Пользователь ${id} успешно сохранен/обновлен в базе данных.`);
         } catch (err: any) {
@@ -260,8 +259,7 @@ app.post("/api/save_user", async (req, res) => {
             first_name = VALUES(first_name),
             last_name = VALUES(last_name),
             username = VALUES(username),
-            language_code = VALUES(language_code),
-            updated_at = CURRENT_TIMESTAMP
+            language_code = VALUES(language_code)
         `, [id, first_name || null, last_name || null, username || null, language_code || null]);
         console.log(`[INFO] Посетитель ${id} (WebApp) успешно сохранен в БД.`);
       } catch (dbErr: any) {
@@ -280,8 +278,7 @@ app.post("/api/save_user", async (req, res) => {
           const rawUsernameTg = username ? `(@${username})` : "";
           await bot.telegram.sendMessage(
             adminChannelId, 
-            `👤 *Новый посетитель в WebApp!*\nПользователь: ${first_name || ""} ${last_name || ""} ${rawUsernameTg}\nID: \`${id}\``,
-            { parse_mode: "Markdown" }
+            `👤 Новый посетитель в WebApp!\nПользователь: ${first_name || ""} ${last_name || ""} ${rawUsernameTg}\nID: ${id}`
           );
         } catch (err: any) {
           console.error(`[ERROR] Не удалось отправить уведомление о посетителе в админ-канал:`, err.message);
@@ -323,8 +320,7 @@ app.post("/api/book", async (req, res) => {
           const rawUsernameTg = user.username ? `(@${user.username})` : "";
           await bot.telegram.sendMessage(
             adminChannelId, 
-            `💰 *Новое бронирование:*\nСеанс: ${title}\nЦена: ${price} руб\nПользователь: ${user.first_name || ""} ${rawUsernameTg}`.trim(),
-            { parse_mode: "Markdown" }
+            `💰 Новое бронирование:\nСеанс: ${title}\nЦена: ${price} руб\nПользователь: ${user.first_name || ""} ${rawUsernameTg}`.trim()
           );
         } catch (err: any) {
           console.error(`[ERROR] Не удалось отправить уведомление о брони в админ-канал:`, err.message);

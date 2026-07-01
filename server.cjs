@@ -37151,4 +37151,4 @@ var require_errors = __commonJS({
     exports2[1127] = "ER_CANT_FIND_DL_ENTRY";
     exports2[1128] = "ER_FUNCTION_NOT_DEFINED";
     exports2[1129] = "ER_HOST_IS_BLOCKED";
-    exports2[1130] = "ER_HOST
+    exports2[1130] = "ER_

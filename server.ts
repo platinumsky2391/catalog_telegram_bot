@@ -108,7 +108,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
       const rawUsernameTg = ctx.from?.username ? `(@${ctx.from.username})` : "";
       
       // Отправка уведомления администратору в plain-text
-      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID;
       if (adminChannelId) {
         try {
           await bot!.telegram.sendMessage(
@@ -116,9 +116,13 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
             `В бот зашел новый пользователь: ${rawUserName} ${rawUsernameTg}`.trim()
           );
           console.log(`[INFO] Уведомление о новом пользователе отправлено в канал: ${adminChannelId}`);
-        } catch (err) {
-          console.error(`[ERROR] Не удалось отправить уведомление в админ-канал ${adminChannelId}. Проверьте права бота:`, err);
+        } catch (err: any) {
+          console.error(`[ERROR] Не удалось отправить уведомление в админ-канал ${adminChannelId}. Проверьте права бота:`, err.message);
+          ctx.reply(`[СИСТЕМА] Внимание администратору: не удалось отправить уведомление. Ошибка: ${err.message}`).catch(() => {});
         }
+      } else {
+        console.warn(`[WARN] Переменная ADMIN_CHANNEL_ID не задана в .env. Уведомления отключены.`);
+        ctx.reply(`[СИСТЕМА] Внимание администратору: переменная ADMIN_CHANNEL_ID не задана в .env, уведомления отключены.`).catch(() => {});
       }
 
       // Экранируем спецсимволы для MarkdownV2 (https://core.telegram.org/bots/api#markdownv2-style)
@@ -136,12 +140,17 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
               first_name = VALUES(first_name),
               last_name = VALUES(last_name),
               username = VALUES(username),
-              language_code = VALUES(language_code)
+              language_code = VALUES(language_code),
+              updated_at = CURRENT_TIMESTAMP
           `, [id, first_name || null, last_name || null, username || null, language_code || null]);
           console.log(`[INFO] Пользователь ${id} успешно сохранен/обновлен в базе данных.`);
-        } catch (err) {
-          console.error(`[ERROR] Не удалось сохранить пользователя ${ctx.from.id} в базу данных:`, err);
+        } catch (err: any) {
+          console.error(`[ERROR] Не удалось сохранить пользователя ${ctx.from.id} в базу данных:`, err.message);
+          ctx.reply(`[СИСТЕМА] Ошибка сохранения пользователя в MySQL: ${err.message}`).catch(() => {});
         }
+      } else if (!pool) {
+        console.warn(`[WARN] Пользователь ${ctx.from?.id} не сохранен: база данных не подключена.`);
+        ctx.reply(`[СИСТЕМА] Ошибка: База данных не подключена. Пользователь не сохранен в MySQL.`).catch(() => {});
       }
 
       return ctx.replyWithMarkdownV2(
@@ -265,16 +274,20 @@ app.post("/api/save_user", async (req, res) => {
     // Always send the Telegram notification
     if (bot) {
       const { id, first_name, last_name, username } = user;
-      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
-      try {
-        const rawUsernameTg = username ? `(@${username})` : "";
-        await bot.telegram.sendMessage(
-          adminChannelId, 
-          `👤 *Новый посетитель в WebApp!*\nПользователь: ${first_name || ""} ${last_name || ""} ${rawUsernameTg}\nID: \`${id}\``,
-          { parse_mode: "Markdown" }
-        );
-      } catch (err) {
-        console.error(`[ERROR] Не удалось отправить уведомление о посетителе в админ-канал:`, err);
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID;
+      if (adminChannelId) {
+        try {
+          const rawUsernameTg = username ? `(@${username})` : "";
+          await bot.telegram.sendMessage(
+            adminChannelId, 
+            `👤 *Новый посетитель в WebApp!*\nПользователь: ${first_name || ""} ${last_name || ""} ${rawUsernameTg}\nID: \`${id}\``,
+            { parse_mode: "Markdown" }
+          );
+        } catch (err: any) {
+          console.error(`[ERROR] Не удалось отправить уведомление о посетителе в админ-канал:`, err.message);
+        }
+      } else {
+        console.warn(`[WARN] ADMIN_CHANNEL_ID не задан. Уведомление о посетителе WebApp не отправлено.`);
       }
     }
 
@@ -304,16 +317,18 @@ app.post("/api/book", async (req, res) => {
       }
       
       // Send notification to Admin Channel
-      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
-      try {
-        const rawUsernameTg = user.username ? `(@${user.username})` : "";
-        await bot.telegram.sendMessage(
-          adminChannelId, 
-          `💰 *Новое бронирование:*\nСеанс: ${title}\nЦена: ${price} руб\nПользователь: ${user.first_name || ""} ${rawUsernameTg}`.trim(),
-          { parse_mode: "Markdown" }
-        );
-      } catch (err) {
-        console.error(`[ERROR] Не удалось отправить уведомление о брони в админ-канал:`, err);
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID;
+      if (adminChannelId) {
+        try {
+          const rawUsernameTg = user.username ? `(@${user.username})` : "";
+          await bot.telegram.sendMessage(
+            adminChannelId, 
+            `💰 *Новое бронирование:*\nСеанс: ${title}\nЦена: ${price} руб\nПользователь: ${user.first_name || ""} ${rawUsernameTg}`.trim(),
+            { parse_mode: "Markdown" }
+          );
+        } catch (err: any) {
+          console.error(`[ERROR] Не удалось отправить уведомление о брони в админ-канал:`, err.message);
+        }
       }
     }
 
@@ -346,8 +361,14 @@ async function initApp() {
     });
   }
 
-  app.listen(PORT, () => {
-    console.log(`[SUCCESS] Fullstack Server running on port ${PORT}`);
+  let serverPort: string | number = PORT;
+  if (typeof (global as any).PhusionPassenger !== 'undefined') {
+    serverPort = 'passenger';
+    console.log("[INFO] Обнаружен Phusion Passenger. Порт изменен на 'passenger'.");
+  }
+
+  app.listen(serverPort, () => {
+    console.log(`[SUCCESS] Fullstack Server running on port ${serverPort}`);
   });
 }
 

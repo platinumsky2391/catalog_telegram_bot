@@ -318,9 +318,21 @@ async function initApp() {
 
 process.on("uncaughtException", (err) => {
   fs.appendFileSync("error.log", `[Uncaught] ${err.message}\n${err.stack}\n`);
+  process.exit(1);
 });
 process.on("unhandledRejection", (err) => {
   fs.appendFileSync("error.log", `[Unhandled] ${err}\n`);
+  process.exit(1);
+});
+
+// Управляем остановкой (для Passenger и локального режима)
+process.once('SIGINT', () => {
+  if (bot) bot.stop('SIGINT');
+  process.exit(0);
+});
+process.once('SIGTERM', () => {
+  if (bot) bot.stop('SIGTERM');
+  process.exit(0);
 });
 
 initApp().catch((err) => {

@@ -35,15 +35,12 @@ jobs:
           
           # Создаем public_html и .htaccess прямо в папке для деплоя
           mkdir -p deploy_build/public_html
-          cat << 'EOF' > deploy_build/public_html/.htaccess
-          PassengerEnabled On
-          PassengerAppRoot /home/p/platines/bot-solien
-          PassengerAppType node
-          PassengerStartupFile server.cjs
-          PassengerNodejs /home/p/platines/bot-solien/bin/node
-          PassengerAppEnv production
-          PassengerMaxInstances 1
-          EOF
+          echo "PassengerEnabled On" > deploy_build/public_html/.htaccess
+          echo "PassengerAppRoot /home/p/platines/bot-solien" >> deploy_build/public_html/.htaccess
+          echo "PassengerAppType node" >> deploy_build/public_html/.htaccess
+          echo "PassengerStartupFile server.cjs" >> deploy_build/public_html/.htaccess
+          echo "PassengerNodejs /home/p/platines/bot-solien/bin/node" >> deploy_build/public_html/.htaccess
+          echo "PassengerAppEnv production" >> deploy_build/public_html/.htaccess
           
           # Создаем tmp/restart.txt для перезапуска Passenger
           mkdir -p deploy_build/tmp
@@ -82,15 +79,12 @@ jobs:
             
             echo "Перезапуск Passenger..."
             mkdir -p public_html
-            cat << 'EOF' > public_html/.htaccess
-            PassengerEnabled On
-            PassengerAppRoot /home/p/platines/bot-solien
-            PassengerAppType node
-            PassengerStartupFile server.cjs
-            PassengerNodejs /home/p/platines/bot-solien/bin/node
-            PassengerAppEnv production
-            PassengerMaxInstances 1
-            EOF
+            echo "PassengerEnabled On" > public_html/.htaccess
+            echo "PassengerAppRoot /home/p/platines/bot-solien" >> public_html/.htaccess
+            echo "PassengerAppType node" >> public_html/.htaccess
+            echo "PassengerStartupFile server.cjs" >> public_html/.htaccess
+            echo "PassengerNodejs /home/p/platines/bot-solien/bin/node" >> public_html/.htaccess
+            echo "PassengerAppEnv production" >> public_html/.htaccess
             
             mkdir -p tmp
             touch tmp/restart.txt

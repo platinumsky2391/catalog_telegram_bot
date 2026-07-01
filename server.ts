@@ -181,7 +181,7 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
         })
         .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
         .catch(err => {
-          console.error("[ERROR] Ошибка запуска бота (возможно 409 Conflict от старого процесса). Повтор через 5 секунд...", err.message);
+          console.warn("[WARN] Ожидание завершения старого процесса бота (409 Conflict). Повтор через 5 секунд...");
           setTimeout(startBotWithRetry, 5000);
         });
     };
@@ -318,11 +318,9 @@ async function initApp() {
 
 process.on("uncaughtException", (err) => {
   fs.appendFileSync("error.log", `[Uncaught] ${err.message}\n${err.stack}\n`);
-  process.exit(1);
 });
 process.on("unhandledRejection", (err) => {
   fs.appendFileSync("error.log", `[Unhandled] ${err}\n`);
-  process.exit(1);
 });
 
 // Управляем остановкой (для Passenger и локального режима)

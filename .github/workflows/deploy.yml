@@ -36,6 +36,7 @@ jobs:
           # Создаем public_html и .htaccess прямо в папке для деплоя
           mkdir -p deploy_build/public_html
           echo "PassengerEnabled On" > deploy_build/public_html/.htaccess
+          echo "PassengerFriendlyErrorPages on" >> deploy_build/public_html/.htaccess
           echo "PassengerAppRoot /home/p/platines/bot-solien" >> deploy_build/public_html/.htaccess
           echo "PassengerAppType node" >> deploy_build/public_html/.htaccess
           echo "PassengerStartupFile server.cjs" >> deploy_build/public_html/.htaccess
@@ -80,6 +81,7 @@ jobs:
             echo "Перезапуск Passenger..."
             mkdir -p public_html
             echo "PassengerEnabled On" > public_html/.htaccess
+            echo "PassengerFriendlyErrorPages on" >> public_html/.htaccess
             echo "PassengerAppRoot /home/p/platines/bot-solien" >> public_html/.htaccess
             echo "PassengerAppType node" >> public_html/.htaccess
             echo "PassengerStartupFile server.cjs" >> public_html/.htaccess

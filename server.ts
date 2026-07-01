@@ -6,7 +6,6 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
-import { createServer as createViteServer } from "vite";
 import { Telegraf, Markup } from "telegraf";
 import dotenv from "dotenv";
 import mysql from "mysql2/promise";
@@ -283,6 +282,7 @@ app.post("/api/book", async (req, res) => {
 async function initApp() {
   if (process.env.NODE_ENV !== "production") {
     console.log("[INFO] Режим разработки. Монтирование Vite Middleware...");
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",

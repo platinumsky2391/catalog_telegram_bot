@@ -243,21 +243,42 @@ app.post("/api/save_user", async (req, res) => {
 
     if (pool) {
       const { id, first_name, last_name, username, language_code } = user;
-      await pool.query(`
-        INSERT INTO users (id, first_name, last_name, username, language_code)
-        VALUES (?, ?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE
-          first_name = VALUES(first_name),
-          last_name = VALUES(last_name),
-          username = VALUES(username),
-          language_code = VALUES(language_code),
-          updated_at = CURRENT_TIMESTAMP
-      `, [id, first_name || null, last_name || null, username || null, language_code || null]);
-      console.log(`[INFO] Посетитель ${id} (WebApp) успешно сохранен в БД.`);
-      res.json({ success: true });
+      try {
+        await pool.query(`
+          INSERT INTO users (id, first_name, last_name, username, language_code)
+          VALUES (?, ?, ?, ?, ?)
+          ON DUPLICATE KEY UPDATE
+            first_name = VALUES(first_name),
+            last_name = VALUES(last_name),
+            username = VALUES(username),
+            language_code = VALUES(language_code),
+            updated_at = CURRENT_TIMESTAMP
+        `, [id, first_name || null, last_name || null, username || null, language_code || null]);
+        console.log(`[INFO] Посетитель ${id} (WebApp) успешно сохранен в БД.`);
+      } catch (dbErr: any) {
+        console.error(`[ERROR] Ошибка записи в БД для пользователя ${id}:`, dbErr.message);
+      }
     } else {
-      res.status(500).json({ error: "Database not configured" });
+      console.warn(`[WARN] Пул БД недоступен, пользователь ${user.id} не будет сохранен в MySQL.`);
     }
+
+    // Always send the Telegram notification
+    if (bot) {
+      const { id, first_name, last_name, username } = user;
+      const adminChannelId = process.env.ADMIN_CHANNEL_ID || "-1003968267594";
+      try {
+        const rawUsernameTg = username ? `(@${username})` : "";
+        await bot.telegram.sendMessage(
+          adminChannelId, 
+          `👤 *Новый посетитель в WebApp!*\nПользователь: ${first_name || ""} ${last_name || ""} ${rawUsernameTg}\nID: \`${id}\``,
+          { parse_mode: "Markdown" }
+        );
+      } catch (err) {
+        console.error(`[ERROR] Не удалось отправить уведомление о посетителе в админ-канал:`, err);
+      }
+    }
+
+    res.json({ success: true });
   } catch (err: any) {
     console.error(`[ERROR] Ошибка сохранения пользователя WebApp:`, err.message);
     res.status(500).json({ error: "Database error" });

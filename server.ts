@@ -167,14 +167,28 @@ if (telegramToken && telegramToken !== "MY_TELEGRAM_BOT_TOKEN" && telegramToken.
     // Используем Long Polling всегда, чтобы избежать проблем с Nginx, 
     // который сейчас перехватывает запросы к /api/ и возвращает index.html.
     console.log("[INFO] Запуск Telegram Бота в режиме Long Polling...");
-    // Удаляем вебхук перед запуском poll-метода, чтобы избежать ошибки 409 Conflict
-    bot.telegram.deleteWebhook({ drop_pending_updates: true })
-      .then(() => {
-        console.log("[INFO] Вебхук успешно удален перед запуском Long Polling.");
-        return bot!.launch();
-      })
-      .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
-      .catch(err => console.error("[ERROR] Ошибка запуска бота:", err));
+    
+    // Обработка ошибок внутри бота, чтобы Node не крашился при 409 Conflict
+    bot.catch((err, ctx) => {
+      console.error(`[ERROR] Ошибка для обновления ${ctx.update.update_id}:`, err);
+    });
+
+    const startBotWithRetry = () => {
+      bot!.telegram.deleteWebhook({ drop_pending_updates: true })
+        .then(() => {
+          console.log("[INFO] Вебхук успешно удален перед запуском Long Polling.");
+          return bot!.launch();
+        })
+        .then(() => console.log("[INFO] Бот успешно запущен и слушает запросы!"))
+        .catch(err => {
+          console.error("[ERROR] Ошибка запуска бота (возможно 409 Conflict от старого процесса). Повтор через 5 секунд...", err.message);
+          setTimeout(startBotWithRetry, 5000);
+        });
+    };
+    
+    // Запускаем через пару секунд, чтобы дать Passenger время погасить старый процесс (Rolling Restart)
+    setTimeout(startBotWithRetry, 2000);
+
   } catch (err) {
     console.error("[ERROR] Ошибка при инициализации Telegraf:", err);
   }

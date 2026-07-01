@@ -32,7 +32,7 @@ jobs:
           cp package-lock.json deploy_build/ 2>/dev/null || true
           cp -r dist deploy_build/
           cp app.js deploy_build/ 2>/dev/null || true
-          
+
           # Создаем public_html и .htaccess прямо в папке для деплоя
           mkdir -p deploy_build/public_html
           echo "PassengerEnabled On" > deploy_build/public_html/.htaccess
@@ -41,7 +41,7 @@ jobs:
           echo "PassengerAppType node" >> deploy_build/public_html/.htaccess
           echo "PassengerStartupFile server.cjs" >> deploy_build/public_html/.htaccess
           echo "PassengerAppEnv production" >> deploy_build/public_html/.htaccess
-          
+
           # Создаем tmp/restart.txt для перезапуска Passenger
           mkdir -p deploy_build/tmp
           date > deploy_build/tmp/restart.txt
@@ -58,34 +58,3 @@ jobs:
             **/.env
             **/node_modules/**
             **/bin/**
-
-      - name: Restart Node.js Server on Beget via SSH
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 22
-          script: |
-            echo "Переходим в директорию домена..."
-            cd /home/p/platines/bot-solien
-            
-            echo "Устанавливаем правильный PATH..."
-            export PATH=/home/p/platines/bot-solien/bin:$PATH
-            
-            echo "Удаляем мусор от предыдущих загрузок (исходники)..."
-            rm -rf src assets img telegram-mini-app .github || true
-            rm -f *.ts *.tsx *.html *.md vite.config.ts tsconfig.json metadata.json || true
-            
-            echo "Перезапуск Passenger..."
-            mkdir -p public_html
-            echo "PassengerEnabled On" > public_html/.htaccess
-            echo "PassengerFriendlyErrorPages on" >> public_html/.htaccess
-            echo "PassengerAppRoot /home/p/platines/bot-solien" >> public_html/.htaccess
-            echo "PassengerAppType node" >> public_html/.htaccess
-            echo "PassengerStartupFile server.cjs" >> public_html/.htaccess
-            echo "PassengerAppEnv production" >> public_html/.htaccess
-            
-            mkdir -p tmp
-            touch tmp/restart.txt
-            echo "Деплой успешно завершен!"
